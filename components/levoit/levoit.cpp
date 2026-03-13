@@ -395,11 +395,11 @@ namespace esphome
         }
         void Levoit::setup()
         {
-            ESP_LOGI(TAG, "Setting up Levoit %s", model_ == ModelType::VITAL200S ? "VITAL200S" : 
-                     model_ == ModelType::VITAL100S ? "VITAL100S" :
-                     model_ == ModelType::CORE300S ? "CORE300S" :
-                     model_ == ModelType::CORE400S ? "CORE400S" :
-                     model_ == ModelType::SUPERIOR6000S ? "SUPERIOR6000S" : "UNKNOWN");
+            ESP_LOGI(TAG, "Setting up Levoit %s", model_ == ModelType::VITAL200S ? "VITAL200S" : model_ == ModelType::VITAL100S   ? "VITAL100S"
+                                                                                             : model_ == ModelType::CORE300S      ? "CORE300S"
+                                                                                             : model_ == ModelType::CORE400S      ? "CORE400S"
+                                                                                             : model_ == ModelType::SUPERIOR6000S ? "SUPERIOR6000S"
+                                                                                                                                  : "UNKNOWN");
 
             // CADR values per model (m³/h)
             if (model_ == ModelType::VITAL200S)
@@ -412,60 +412,71 @@ namespace esphome
                 cadr = 415;
             else if (model_ == ModelType::SUPERIOR6000S)
                 cadr = 500;
-            
+
             // Initialize preferences for tracking used_cadr and total_runtime
             pref_used_cadr_ = global_preferences->make_preference<uint32_t>(fnv1_hash("levoit_used_cadr"));
             pref_total_runtime_ = global_preferences->make_preference<uint32_t>(fnv1_hash("levoit_runtime"));
-            
+
             // Restore saved values or initialize to 0
-            if (pref_used_cadr_.load(&used_cadr_)) {
+            if (pref_used_cadr_.load(&used_cadr_))
+            {
                 ESP_LOGI(TAG, "Restored used_cadr: %u m³", used_cadr_);
-            } else {
+            }
+            else
+            {
                 used_cadr_ = 0;
                 ESP_LOGI(TAG, "Initialized used_cadr to 0");
             }
-            if (pref_total_runtime_.load(&total_runtime_)) {
+            if (pref_total_runtime_.load(&total_runtime_))
+            {
                 ESP_LOGI(TAG, "Restored total_runtime: %u hours", total_runtime_);
-            } else {
+            }
+            else
+            {
                 total_runtime_ = 0;
                 ESP_LOGI(TAG, "Initialized total_runtime to 0");
             }
-                               
+
             // Set LED to blink on initial connect until WiFi is connected
             this->sendCommand(CommandType::setWifiLedBlinking);
             this->sendCommand(CommandType::setFilterLedOn);
             filter_led_on_ = true;
             filter_blinking_ = true;
-            
+
+            // Initialize timer current to a known value to avoid UNKNOWN on boot.
+            this->publish_sensor(SensorType::TIMER_CURRENT, 0.0f);
+            this->publish_binary_sensor(BinarySensorType::ERROR_STATE, false);
+
             // Track CADR on initial setup
             track_cadr_usage();
         }
-        
+
         void Levoit::track_cadr_usage()
         {
             // Get fan state - check if fan is ON using .state member
-            if (this->fan_ != nullptr && this->fan_->state) {
+            if (this->fan_ != nullptr && this->fan_->state)
+            {
                 // Fan is enabled - track usage
                 total_runtime_++;
-                
+
                 // Get fan speed level (1-4) from .speed member
                 int speed = this->fan_->speed;
-                if (speed > 0 && speed <= 4) {
+                if (speed > 0 && speed <= 4)
+                {
                     // Use helper to compute current CADR/hour, then convert to per-minute
                     uint32_t cadr_per_hour = this->calculate_current_cadr_per_hour();
                     uint32_t cadr_per_min = cadr_per_hour / 60;
                     used_cadr_ += cadr_per_min;
-                    ESP_LOGD(TAG, "CADR tracked: +%u m³ (speed=%d, total=%u m³, runtime=%u min)", 
+                    ESP_LOGD(TAG, "CADR tracked: +%u m³ (speed=%d, total=%u m³, runtime=%u min)",
                              cadr_per_min, speed, used_cadr_, total_runtime_);
-                    
                 }
-                
+
                 // Calculate and publish filter life left (once per minute here)
                 float filter_left = this->calculate_filter_life_left_percent();
                 auto *se = this->sensors_[st_idx_(SensorType::FILTER_LIFE_LEFT)];
                 if (se != nullptr)
                     se->publish_state(filter_left);
-                
+
                 // Save to preferences every minute when running
                 pref_used_cadr_.save(&used_cadr_);
                 pref_total_runtime_.save(&total_runtime_);
@@ -478,8 +489,8 @@ namespace esphome
                 return 0;
             int speed = this->fan_->speed;
             // Determine max speed based on model (Core300S has 3 speeds, Superior has 9)
-            uint32_t max_speed = (this->model_ == ModelType::CORE300S) ? 3u :
-                                 (this->model_ == ModelType::SUPERIOR6000S) ? 9u : 4u;
+            uint32_t max_speed = (this->model_ == ModelType::CORE300S) ? 3u : (this->model_ == ModelType::SUPERIOR6000S) ? 9u
+                                                                                                                         : 4u;
             if (speed <= 0 || (uint32_t)speed > max_speed)
                 return 0;
             uint32_t result = (cadr * (uint32_t)speed) / max_speed;
@@ -522,14 +533,14 @@ namespace esphome
             static uint32_t last_cadr_check = 0;
             static uint32_t last_filter_check = 0;
             uint32_t now = millis();
-            
+
             // Every minute: track CADR usage and runtime
             if (now - last_check_min >= 60000)
             {
                 last_check_min = now;
                 track_cadr_usage();
             }
-            
+
             if (now - last_check_sec >= 1000)
             {
                 // every second
@@ -852,8 +863,7 @@ namespace esphome
         {
 
             uint8_t pv = 0x01;
-            if (this->model_ == ModelType::VITAL100S || this->model_ == ModelType::VITAL200S
-                || this->model_ == ModelType::SUPERIOR6000S)
+            if (this->model_ == ModelType::VITAL100S || this->model_ == ModelType::VITAL200S || this->model_ == ModelType::SUPERIOR6000S)
             {
                 pv = 0x02;
                 ESP_LOGI("TAG", ">>> Sending VITAL/SUPERIOR ack for: 0x%02X 0x%02X", ptype0, ptype1);

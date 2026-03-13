@@ -29,7 +29,7 @@ namespace esphome
       float remaining_hours = remaining_sec / 3600.0f;
       float initial_hours = initial_sec / 3600.0f;
 
-      ESP_LOGV(TAG_CORE, "Timer: remaining=%u sec (%.2f h), initial=%u sec (%.2f h)", 
+      ESP_LOGV(TAG_CORE, "Timer: remaining=%u sec (%.2f h), initial=%u sec (%.2f h)",
                remaining_sec, remaining_hours, initial_sec, initial_hours);
 
       self->publish_number(NumberType::TIMER, initial_hours);
@@ -91,10 +91,7 @@ namespace esphome
 
       // Publish state to ESPHome entities
       self->publish_text_sensor(TextSensorType::MCU_VERSION, std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(patch));
-      if (has_error)
-        self->publish_text_sensor(TextSensorType::ERROR_MESSAGE, "Sensor error");
-      else
-        self->publish_text_sensor(TextSensorType::ERROR_MESSAGE, "Ok");
+      self->publish_binary_sensor(BinarySensorType::ERROR_STATE, has_error);
       self->publish_switch(SwitchType::CHILD_LOCK, child_lock);
       self->publish_switch(SwitchType::DISPLAY, display_on);
       self->publish_sensor(SensorType::AQI, (unsigned)aqi);

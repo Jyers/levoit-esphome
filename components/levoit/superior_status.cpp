@@ -114,8 +114,8 @@ namespace esphome
           break;
 
         case 0x0A:
-          ESP_LOGV(TAG_SUP, "TemperatureInt=%u°C", (unsigned)t.value_u32);
-          // Prefer 0x1E (precise temperature) when available
+          ESP_LOGV(TAG_SUP, "AirQualityDetail/Error=%u", (unsigned)t.value_u32);
+          self->publish_binary_sensor(BinarySensorType::ERROR_STATE, (unsigned)t.value_u32 == 0);
           break;
 
         case 0x0B:

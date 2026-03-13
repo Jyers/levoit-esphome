@@ -11,8 +11,7 @@ namespace esphome
   namespace levoit
   {
 
-    static const char *const TAG_VITAL = "levoit.vital"; 
-
+    static const char *const TAG_VITAL = "levoit.vital";
 
     static inline uint8_t b_(const LevoitTLV &t, size_t idx)
     {
@@ -59,11 +58,12 @@ namespace esphome
             self->publish_sensor(SensorType::TIMER_CURRENT, remaining_hours);
             if (remaining_secs > 0)
             {
-              self->start_timer();        
+              self->start_timer();
             }
             else
             {
-              if (self->is_timer_active()){
+              if (self->is_timer_active())
+              {
                 self->stop_timer();
                 self->publish_number(NumberType::TIMER, 0.0f);
               }
@@ -164,10 +164,7 @@ namespace esphome
           ESP_LOGV(TAG_VITAL, "AirQualityDetail=%u", (unsigned)t.value_u32);
           if (self != nullptr)
           {
-            if ((unsigned)t.value_u32 == 0)
-              self->publish_text_sensor(TextSensorType::ERROR_MESSAGE, "Sensor Error");
-            else
-              self->publish_text_sensor(TextSensorType::ERROR_MESSAGE, "Ok");
+            self->publish_binary_sensor(BinarySensorType::ERROR_STATE, (unsigned)t.value_u32 == 0);
           }
           break;
         case 0x0B:

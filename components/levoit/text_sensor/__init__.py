@@ -15,7 +15,6 @@ TextSensorType = levoit_ns.enum("TextSensorType")
 TYPE_MAP = {
     "mcu_version": TextSensorType.MCU_VERSION,
     "esp_version": TextSensorType.ESP_VERSION,
-    "error_message": TextSensorType.ERROR_MESSAGE,
 }
 
 TYPE_DEFAULTS = {
@@ -24,9 +23,6 @@ TYPE_DEFAULTS = {
     },
     "esp_version": {
         CONF_ICON: "mdi:chip",
-    },
-    "error_message": {
-        CONF_ICON: "mdi:alert-circle-outline",
     },
 }
 

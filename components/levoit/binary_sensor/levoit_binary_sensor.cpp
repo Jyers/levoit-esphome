@@ -24,6 +24,8 @@ namespace esphome
                 break;
             case BinarySensorType::WATER_TANK_EMPTY:
                 break;
+            case BinarySensorType::ERROR_STATE:
+                break;
             default:
                 break;
             }

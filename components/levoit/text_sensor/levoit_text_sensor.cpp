@@ -21,9 +21,6 @@ namespace esphome
         this->publish_state(this->parent_->get_version());
         this->set_entity_category(EntityCategory::ENTITY_CATEGORY_DIAGNOSTIC);
         break;
-      case TextSensorType::ERROR_MESSAGE:
-        this->set_entity_category(EntityCategory::ENTITY_CATEGORY_DIAGNOSTIC);
-        break;
       default:
         break;
       }

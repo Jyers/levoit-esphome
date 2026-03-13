@@ -46,13 +46,13 @@ namespace esphome
             AQI = 0,
             PM25 = 1,
             TIMER_CURRENT = 2,
-            EFFICIENCY_COUNTER = 3,  // Vital only
+            EFFICIENCY_COUNTER = 3, // Vital only
             CURRENT_CADR = 4,
             FILTER_LIFE_LEFT = 5,
-            HUMIDITY = 6,            // Superior only
-            TEMPERATURE = 7,         // Superior only
-            FILTER_LIFE_MCU = 8,     // Superior only
-            DRY_TIME_REMAINING = 9,  // Superior only
+            HUMIDITY = 6,           // Superior only
+            TEMPERATURE = 7,        // Superior only
+            FILTER_LIFE_MCU = 8,    // Superior only
+            DRY_TIME_REMAINING = 9, // Superior only
         };
         static constexpr SensorType AQI = SensorType::AQI;
         static constexpr SensorType PM25 = SensorType::PM25;
@@ -72,12 +72,14 @@ namespace esphome
             WATER_TANK_EMPTY = 2, // Superior only
             DRY_ACTIVE = 3,       // Superior only
             HUMIDIFYING = 4,      // Superior only
+            ERROR_STATE = 5,
         };
         static constexpr BinarySensorType FILTER_LOW = BinarySensorType::FILTER_LOW;
         static constexpr BinarySensorType COVER_REMOVED = BinarySensorType::COVER_REMOVED;
         static constexpr BinarySensorType WATER_TANK_EMPTY = BinarySensorType::WATER_TANK_EMPTY;
         static constexpr BinarySensorType DRY_ACTIVE = BinarySensorType::DRY_ACTIVE;
         static constexpr BinarySensorType HUMIDIFYING = BinarySensorType::HUMIDIFYING;
+        static constexpr BinarySensorType ERROR_STATE = BinarySensorType::ERROR_STATE;
 
         enum class ButtonType : uint8_t
         {
@@ -89,18 +91,16 @@ namespace esphome
         {
             MCU_VERSION = 0,
             ESP_VERSION = 1,
-            ERROR_MESSAGE = 2,
         };
         static constexpr TextSensorType MCU_VERSION = TextSensorType::MCU_VERSION;
         static constexpr TextSensorType ESP_VERSION = TextSensorType::ESP_VERSION;
-        static constexpr TextSensorType ERROR_MESSAGE = TextSensorType::ERROR_MESSAGE;
 
         enum class SelectType : uint8_t
         {
             AUTO_MODE = 0,
-            AUTO_PROFILE = 1,    // Superior only
+            AUTO_PROFILE = 1,     // Superior only
             HUMIDITY_SUBTYPE = 2, // Superior only
-            DRY_LEVEL = 3,       // Superior only
+            DRY_LEVEL = 3,        // Superior only
         };
         static constexpr SelectType AUTO_MODE = SelectType::AUTO_MODE;
         static constexpr SelectType AUTO_PROFILE = SelectType::AUTO_PROFILE;

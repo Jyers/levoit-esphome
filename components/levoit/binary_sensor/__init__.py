@@ -19,6 +19,7 @@ TYPE_MAP = {
     "water_tank_empty": BinarySensorType.WATER_TANK_EMPTY,
     "dry_active": BinarySensorType.DRY_ACTIVE,
     "humidifying": BinarySensorType.HUMIDIFYING,
+    "error_state": BinarySensorType.ERROR_STATE,
 }
 
 TYPE_DEFAULTS = {
@@ -41,6 +42,10 @@ TYPE_DEFAULTS = {
     "water_tank_empty": {
         CONF_DEVICE_CLASS: "problem",
         CONF_ICON: "mdi:waves-arrow-up",
+    },
+    "error_state": {
+        CONF_DEVICE_CLASS: "problem",
+        CONF_ICON: "mdi:alert-circle-outline",
     },
 }
 

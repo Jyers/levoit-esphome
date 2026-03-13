@@ -137,16 +137,16 @@ text_sensor:
     levoit: levoit_device
     name: "ESP Version"
     type: esp_version
-  - platform: levoit
-    levoit: levoit_device
-    name: "Error Message"
-    type: error_message
 
 binary_sensor:
   - platform: levoit
     levoit: levoit_device
     name: "Filter Low"
     type: filter_low
+  - platform: levoit
+    levoit: levoit_device
+    name: "Error"
+    type: error_state
   - platform: levoit
     levoit: levoit_device
     name: "Cover Removed"
