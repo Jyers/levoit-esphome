@@ -10,24 +10,30 @@ namespace esphome
 
     static const char *const TAG = "levoit.select";
 
-    void LevoitSelect::setup() {
+    void LevoitSelect::setup()
+    {
       this->set_entity_category(EntityCategory::ENTITY_CATEGORY_CONFIG);
 
-      switch (this->type_) {
-        case SelectType::AUTO_MODE: 
-          this->traits.set_options({"Default","Quiet","Room Size"});
-          break;
-        case SelectType::AUTO_PROFILE:
-          this->traits.set_options({"Home","Away"});
-          break;
-        case SelectType::HUMIDITY_SUBTYPE:
-          this->traits.set_options({"Smart","Fan"});
-          break;
-        case SelectType::DRY_LEVEL:
-          this->traits.set_options({"Low","High"});
-          break;
-        default:
-          break;
+      switch (this->type_)
+      {
+      case SelectType::AUTO_MODE:
+        this->traits.set_options({"Default", "Quiet", "Room Size"});
+        this->set_icon("mdi:fan-auto");
+        break;
+      case SelectType::AUTO_PROFILE:
+        this->traits.set_options({"Home", "Away"});
+        this->set_icon("mdi:home-account");
+        break;
+      case SelectType::HUMIDITY_SUBTYPE:
+        this->traits.set_options({"Smart", "Fan"});
+        this->set_icon("mdi:cloud-percent");
+        break;
+      case SelectType::DRY_LEVEL:
+        this->traits.set_options({"Low", "High"});
+        this->set_icon("mdi:fan");
+        break;
+      default:
+        break;
       }
     }
     void LevoitSelect::dump_config() { LOG_SELECT("", "Levoit Select", this); }
@@ -38,7 +44,8 @@ namespace esphome
       const auto &options = this->traits.get_options();
       auto it = std::find(options.begin(), options.end(), value);
 
-      if (it == options.end()) {
+      if (it == options.end())
+      {
         ESP_LOGW(TAG, "Unknown select option: %s", value.c_str());
         return;
       }
@@ -48,7 +55,8 @@ namespace esphome
       // Optimistic update for HA UI (string!)
       this->publish_state(value);
 
-      if (!parent_) {
+      if (!parent_)
+      {
         ESP_LOGW(TAG, "No parent set for select");
         return;
       }

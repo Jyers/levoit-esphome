@@ -1,9 +1,9 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import switch
-from esphome.const import CONF_ID, CONF_ICON
+from esphome.const import CONF_ICON, CONF_ID
 
-from .. import Levoit, CONF_LEVOIT_ID, levoit_ns
+from .. import CONF_LEVOIT_ID, Levoit, levoit_ns
 
 CONF_TYPE = "type"
 
@@ -18,14 +18,6 @@ TYPE_MAP = {
     "auto_dry_water_empty": SwitchType.AUTO_DRY_WATER_EMPTY,
 }
 
-ICON_MAP = {
-    "display": "mdi:brightness-7",
-    "child_lock": "mdi:lock-outline",
-    "light_detect": "mdi:lightbulb-auto-outline",
-    "auto_dry_power_off": "mdi:fan-auto",
-    "auto_dry_water_empty": "mdi:fan-auto",
-}
-
 CONFIG_SCHEMA = switch.switch_schema(LevoitSwitch).extend(
     {
         cv.Required(CONF_LEVOIT_ID): cv.use_id(Levoit),
@@ -34,14 +26,11 @@ CONFIG_SCHEMA = switch.switch_schema(LevoitSwitch).extend(
     }
 )
 
+
 async def to_code(config):
     parent = await cg.get_variable(config[CONF_LEVOIT_ID])
 
     switch_type = config[CONF_TYPE]
-    if CONF_ICON not in config:
-        icon = ICON_MAP.get(switch_type)
-        if icon:
-            config[CONF_ICON] = icon
 
     var = cg.new_Pvariable(config[CONF_ID])
     await switch.register_switch(var, config)

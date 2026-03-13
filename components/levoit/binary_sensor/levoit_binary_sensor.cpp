@@ -2,14 +2,17 @@
 #include "esphome/core/log.h"
 #include "../levoit.h"
 
-namespace esphome {
-namespace levoit {
+namespace esphome
+{
+    namespace levoit
+    {
 
-static const char *const TAG = "levoit.binary_sensor";
+        static const char *const TAG = "levoit.binary_sensor";
 
-void LevoitBinarySensor::setup() {
-  ESP_LOGD(TAG, "Setting up Levoit Binary Sensor");
-              switch (this->type_)
+        void LevoitBinarySensor::setup()
+        {
+            ESP_LOGD(TAG, "Setting up Levoit Binary Sensor");
+            switch (this->type_)
             {
             case BinarySensorType::FILTER_LOW:
                 this->set_device_class("problem");
@@ -17,34 +20,41 @@ void LevoitBinarySensor::setup() {
                 break;
             case BinarySensorType::COVER_REMOVED:
                 this->set_device_class("opening");
+                this->set_icon("mdi:window-open");
                 break;
             case BinarySensorType::DRY_ACTIVE:
                 this->set_device_class("running");
+                this->set_icon("mdi:hair-dryer");
                 break;
             case BinarySensorType::HUMIDIFYING:
                 this->set_device_class("running");
+                this->set_icon("mdi:air-humidifier");
                 break;
             case BinarySensorType::WATER_TANK_EMPTY:
                 this->set_device_class("problem");
+                this->set_icon("mdi:waves-arrow-up");
                 break;
             default:
                 break;
             }
-}
+        }
 
-void LevoitBinarySensor::dump_config() {
-  LOG_BINARY_SENSOR("", "Levoit Binary Sensor", this);
-}
+        void LevoitBinarySensor::dump_config()
+        {
+            LOG_BINARY_SENSOR("", "Levoit Binary Sensor", this);
+        }
 
-void LevoitBinarySensor::loop() {
-	if (this->parent_ == nullptr)
-		return;
+        void LevoitBinarySensor::loop()
+        {
+            if (this->parent_ == nullptr)
+                return;
 
-	bool desired = this->parent_->get_binary_sensor_state(this->type_);
-	if (!this->has_state() || this->state != desired) {
-		this->publish_state(desired);
-	}
-}
+            bool desired = this->parent_->get_binary_sensor_state(this->type_);
+            if (!this->has_state() || this->state != desired)
+            {
+                this->publish_state(desired);
+            }
+        }
 
-}  // namespace levoit
-}  // namespace esphome
+    } // namespace levoit
+} // namespace esphome
