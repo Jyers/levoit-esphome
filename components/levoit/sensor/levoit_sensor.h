@@ -20,7 +20,6 @@ namespace esphome
     protected:
       SensorType type_{SensorType::PM25};
       Levoit *parent_{nullptr};
-
     };
 
   } // namespace levoit

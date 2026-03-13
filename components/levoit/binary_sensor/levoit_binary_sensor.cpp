@@ -14,7 +14,7 @@ namespace esphome
             ESP_LOGD(TAG, "Setting up Levoit Binary Sensor");
             switch (this->type_)
             {
-            case BinarySensorType::FILTER_LOW:
+            case BinarySensorType::FILTER_STATE:
                 break;
             case BinarySensorType::COVER_REMOVED:
                 break;

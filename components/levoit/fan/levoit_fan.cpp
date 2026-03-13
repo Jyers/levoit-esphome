@@ -25,7 +25,8 @@ namespace esphome
         };
         static int preset_to_device_mode(const char *preset)
         {
-            if (!preset) return -1;
+            if (!preset)
+                return -1;
             for (auto &m : MODE_MAP)
                 if (std::strcmp(preset, m.preset) == 0)
                     return m.device;
@@ -53,32 +54,35 @@ namespace esphome
             std::vector<const char *> preset_modes;
             for (const auto &m : MODE_MAP)
             {
-                if(isCoreModel && std::strcmp(m.preset, "Pet") == 0)
+                if (isCoreModel && std::strcmp(m.preset, "Pet") == 0)
                     continue; // Core models do not have Pet mode
-                if(!isSuperior && std::strcmp(m.preset, "Humidity") == 0)
+                if (!isSuperior && std::strcmp(m.preset, "Humidity") == 0)
                     continue; // Only Superior has Humidity mode
-                if(isSuperior && std::strcmp(m.preset, "Pet") == 0)
+                if (isSuperior && std::strcmp(m.preset, "Pet") == 0)
                     continue; // Superior does not have Pet mode
-                if(!isSuperior && std::strcmp(m.preset, "Dry") == 0)
+                if (!isSuperior && std::strcmp(m.preset, "Dry") == 0)
                     continue; // Only Superior has Dry mode
                 preset_modes.push_back(m.preset);
             }
-            
+
             // Set speed count based on model
-            if (parent_ != nullptr && isCore300s) {
-                this->speed_count_ = 3;  // Core300S has 3 speeds
-            } else if (parent_ != nullptr && isSuperior) {
-                this->speed_count_ = 9;  // Superior has 9 speeds
-            } else {
-                this->speed_count_ = 4;  // Other models have 4 speeds
+            if (parent_ != nullptr && isCore300s)
+            {
+                this->speed_count_ = 3; // Core300S has 3 speeds
+            }
+            else if (parent_ != nullptr && isSuperior)
+            {
+                this->speed_count_ = 9; // Superior has 9 speeds
+            }
+            else
+            {
+                this->speed_count_ = 4; // Other models have 4 speeds
             }
 
             // Construct traits
             this->traits_ =
                 fan::FanTraits(this->has_oscillating_, this->speed_count_ > 0, this->has_direction_, this->speed_count_);
             this->traits_.set_supported_preset_modes(preset_modes);
-    
-     
         }
 
         void LevoitFan::dump_config() { LOG_FAN("", "Levoit Fan", this); }
@@ -112,7 +116,7 @@ namespace esphome
                 int new_speed = *call.get_speed();
                 if (new_speed != cur_speed)
                 {
-                    //this->current_preset_ = "Manual"; // changing speed implies Manual mode
+                    // this->current_preset_ = "Manual"; // changing speed implies Manual mode
                     this->speed = new_speed;
                     speed_cmd = new_speed;
                 }
@@ -143,7 +147,7 @@ namespace esphome
         void LevoitFan::apply_device_status(int power, int speed_level, int mode)
         {
             bool dirty = false;
-            
+
             // power: -1 = keep current
             if (power != -1)
             {
@@ -182,7 +186,7 @@ namespace esphome
                     this->set_preset_mode_(preset);
                 }
             }
-            
+
             // Only publish state if something changed
             if (dirty)
             {

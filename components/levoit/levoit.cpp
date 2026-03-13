@@ -164,7 +164,7 @@ namespace esphome
             if (se != nullptr)
                 se->publish_state(filter_left);
             // Publish binary sensor state based on 5% threshold
-            this->publish_binary_sensor(BinarySensorType::FILTER_LOW, filter_left < 5.0f);
+            this->publish_binary_sensor(BinarySensorType::FILTER_STATE, filter_left < 5.0f);
         }
         void Levoit::on_switch_command(SwitchType type, bool state)
         {
@@ -609,8 +609,8 @@ namespace esphome
                 auto *se = this->sensors_[st_idx_(SensorType::FILTER_LIFE_LEFT)];
                 if (se != nullptr)
                     se->publish_state(filter_left);
-                // Also update FILTER_LOW binary sensor
-                this->publish_binary_sensor(BinarySensorType::FILTER_LOW, filter_left < 5.0f);
+                // Also update FILTER_STATE binary sensor
+                this->publish_binary_sensor(BinarySensorType::FILTER_STATE, filter_left < 5.0f);
             }
 
             if (this->model_ == ModelType::SUPERIOR6000S)

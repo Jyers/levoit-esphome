@@ -125,8 +125,8 @@ text_sensor:
 binary_sensor:
   - platform: levoit
     levoit: levoit_device
-    name: "Filter Low"
-    type: filter_low
+    name: "Filter State"
+    type: filter_state
   - platform: levoit
     levoit: levoit_device
     name: "Error"

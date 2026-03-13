@@ -20,7 +20,6 @@ namespace esphome
     protected:
       TextSensorType type_{TextSensorType::MCU_VERSION};
       Levoit *parent_{nullptr};
-
     };
 
   } // namespace levoit

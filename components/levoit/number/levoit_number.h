@@ -3,25 +3,27 @@
 #include "esphome/core/preferences.h"
 #include "../types.h"
 
-namespace esphome {
-namespace levoit {
+namespace esphome
+{
+  namespace levoit
+  {
 
-class Levoit;
+    class Levoit;
 
-class LevoitNumber :  public number::Number, public Component {
- public:
-  void set_parent(Levoit *parent) { parent_ = parent; }
-  void set_type(NumberType t) { type_ = t; }
-  void setup() override;
-  void dump_config() override;
-  
+    class LevoitNumber : public number::Number, public Component
+    {
+    public:
+      void set_parent(Levoit *parent) { parent_ = parent; }
+      void set_type(NumberType t) { type_ = t; }
+      void setup() override;
+      void dump_config() override;
 
- protected:
-  void control(float value) override;
-  Levoit *parent_{nullptr};
-  NumberType type_{NumberType::TIMER};
-  ESPPreferenceObject pref_;
-};
+    protected:
+      void control(float value) override;
+      Levoit *parent_{nullptr};
+      NumberType type_{NumberType::TIMER};
+      ESPPreferenceObject pref_;
+    };
 
-}  // namespace levoit
-}  // namespace esphome
+  } // namespace levoit
+} // namespace esphome

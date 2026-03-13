@@ -13,7 +13,7 @@ LevoitBinarySensor = levoit_ns.class_(
 BinarySensorType = levoit_ns.enum("BinarySensorType")
 
 TYPE_MAP = {
-    "filter_low": BinarySensorType.FILTER_LOW,
+    "filter_state": BinarySensorType.FILTER_STATE,
     # Superior only below
     "cover_removed": BinarySensorType.COVER_REMOVED,
     "water_tank_empty": BinarySensorType.WATER_TANK_EMPTY,
@@ -23,7 +23,7 @@ TYPE_MAP = {
 }
 
 TYPE_DEFAULTS = {
-    "filter_low": {
+    "filter_state": {
         CONF_DEVICE_CLASS: "problem",
         CONF_ICON: "mdi:air-filter",
     },

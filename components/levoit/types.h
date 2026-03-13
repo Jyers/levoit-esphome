@@ -67,14 +67,14 @@ namespace esphome
 
         enum class BinarySensorType : uint8_t
         {
-            FILTER_LOW = 0,
+            FILTER_STATE = 0,
             COVER_REMOVED = 1,    // Superior only
             WATER_TANK_EMPTY = 2, // Superior only
             DRY_ACTIVE = 3,       // Superior only
             HUMIDIFYING = 4,      // Superior only
             ERROR_STATE = 5,
         };
-        static constexpr BinarySensorType FILTER_LOW = BinarySensorType::FILTER_LOW;
+        static constexpr BinarySensorType FILTER_STATE = BinarySensorType::FILTER_STATE;
         static constexpr BinarySensorType COVER_REMOVED = BinarySensorType::COVER_REMOVED;
         static constexpr BinarySensorType WATER_TANK_EMPTY = BinarySensorType::WATER_TANK_EMPTY;
         static constexpr BinarySensorType DRY_ACTIVE = BinarySensorType::DRY_ACTIVE;
