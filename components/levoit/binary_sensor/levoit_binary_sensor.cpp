@@ -25,6 +25,7 @@ namespace esphome
             case BinarySensorType::WATER_TANK_EMPTY:
                 break;
             case BinarySensorType::ERROR_STATE:
+                this->set_entity_category(EntityCategory::ENTITY_CATEGORY_DIAGNOSTIC);
                 break;
             default:
                 break;
