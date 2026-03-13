@@ -17,16 +17,17 @@ namespace esphome
       switch (this->type_) {
         case NumberType::EFFICIENCY_ROOM_SIZE:
           this->set_entity_category(EntityCategory::ENTITY_CATEGORY_CONFIG);
+          this->set_icon("mdi:floor-plan");
           this->traits.set_device_class("area");
           this->traits.set_unit_of_measurement("m²");
           this->traits.set_mode(number::NumberMode::NUMBER_MODE_SLIDER);
           this->traits.set_min_value(132);
           this->traits.set_max_value(792);
-          this->traits.set_step(14);  // 1 m
-      
+          this->traits.set_step(14);
           break;
 
         case NumberType::TIMER:
+          this->set_icon("mdi:timer-outline");
           this->traits.set_device_class("duration");
           this->traits.set_unit_of_measurement("h");
           this->traits.set_mode(number::NumberMode::NUMBER_MODE_SLIDER);

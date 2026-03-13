@@ -34,7 +34,7 @@ namespace esphome
         ESP_LOGW(TAG_VITAL, "TLV extraction failed (payload_len=%u)", (unsigned)payload_len);
         return;
       }
-      // Map Vital response to compoenent state
+      // Map Vital timer response to component state
       for (const auto &t : tlvs)
       {
         switch (t.tag)
@@ -103,16 +103,14 @@ namespace esphome
 
       bool power = false;
       uint32_t mode = 0;
-      uint32_t speed = 0; // choose FanLevel or FanSpeed, see notes below
+      uint32_t speed = 0;
 
-      // Map Vital response to compoenent state
       for (const auto &t : tlvs)
       {
         switch (t.tag)
         {
         case 0x00:
           ESP_LOGV(TAG_VITAL, "ID=%u (0x%02X)", (unsigned)t.value_u32, (unsigned)t.value_u32);
-          // TODO
           break;
 
         case 0x01:
@@ -152,11 +150,8 @@ namespace esphome
           break;
         }
         case 0x07:
-        {
           ESP_LOGV(TAG_VITAL, "DisplayState=%u", (unsigned)t.value_u32);
-          // TODO!
           break;
-        }
         case 0x08:
           ESP_LOGV(TAG_VITAL, "Unknown_08=%u", (unsigned)t.value_u32);
           break;
@@ -167,12 +162,13 @@ namespace esphome
           break;
         case 0x0A:
           ESP_LOGV(TAG_VITAL, "AirQualityDetail=%u", (unsigned)t.value_u32);
-          if( self != nullptr){
-            if((unsigned)t.value_u32 == 0){
+          if (self != nullptr)
+          {
+            if ((unsigned)t.value_u32 == 0)
               self->publish_text_sensor(TextSensorType::ERROR_MESSAGE, "Sensor Error");
-            }else{
+            else
               self->publish_text_sensor(TextSensorType::ERROR_MESSAGE, "Ok");
-            }
+          }
           }
             
           break;
@@ -190,37 +186,19 @@ namespace esphome
         }
         case 0x0F:
           ESP_LOGV(TAG_VITAL, "AutoMode=%u", (unsigned)t.value_u32);
-          // TODO!
           if (self != nullptr)
           {
-            // map AutoMode to Select index, in this case both are identical
             uint8_t auto_mode = static_cast<uint8_t>(t.value_u32);
-            uint8_t select_idx;
             if (auto_mode < 3)
             {
-              select_idx = auto_mode;
+              self->publish_select(SelectType::AUTO_MODE, auto_mode);
             }
             else
             {
-              ESP_LOGW(TAG_VITAL, "AUTO_MODE_MAP: index out of range: %u", auto_mode);
-              select_idx = 0; // fallback to "Default"
+              ESP_LOGW(TAG_VITAL, "AutoMode out of range: %u, defaulting to 0", auto_mode);
+              self->publish_select(SelectType::AUTO_MODE, 0);
             }
-
-            /*
-            static constexpr uint8_t AUTO_MODE_MAP[] = {0, 1, 2};
-
-
-            if (auto_mode < sizeof(AUTO_MODE_MAP)) {
-              ESP_LOGV(TAG_VITAL, "AUTO_MODE_MAP: mapping %u to %u", (unsigned)auto_mode, (unsigned)AUTO_MODE_MAP[auto_mode]);
-              select_idx = AUTO_MODE_MAP[auto_mode];
-            } else {
-              ESP_LOGW(TAG_VITAL, "AUTO_MODE_MAP: index out of range: %u", auto_mode);
-              select_idx = AUTO_MODE_MAP[0];  // fallback to "Default"
-            }
-            */
-            self->publish_select(SelectType::AUTO_MODE, select_idx);
           }
-
           break;
         case 0x10:
           ESP_LOGV(TAG_VITAL, "EfficientValue=%u (0x%04X)", (unsigned)t.value_u32, (unsigned)t.value_u32);
@@ -234,34 +212,24 @@ namespace esphome
           break;
         case 0x12:
           ESP_LOGV(TAG_VITAL, "AutoModeProfile=%u", (unsigned)t.value_u32);
-          // TODO!
           break;
         case 0x13:
-        {
           ESP_LOGV(TAG_VITAL, "LightDetect=%u", (unsigned)t.value_u32);
           if (self != nullptr)
             self->publish_switch(SwitchType::LIGHT_DETECT, t.value_u32 == 1);
           break;
-        }
         case 0x16:
           ESP_LOGV(TAG_VITAL, "WifiLight=%u", (unsigned)t.value_u32);
-          // TODO!
           break;
         case 0x17:
-          ESP_LOGV(TAG_VITAL, "Dark Dedected=%u", (unsigned)t.value_u32);
-          // TODO!
+          ESP_LOGV(TAG_VITAL, "DarkDetected=%u", (unsigned)t.value_u32);
           break;
         case 0x18:
           ESP_LOGV(TAG_VITAL, "SleepModeType=%u", (unsigned)t.value_u32);
-          // TODO!
           break;
         case 0x19:
-        {
           ESP_LOGV(TAG_VITAL, "QuickCleanEnabled=%u", (unsigned)t.value_u32);
-          // TODO!
           break;
-        }
-        // TODO!
         case 0x1A:
           ESP_LOGV(TAG_VITAL, "QuickCleanMinutes=%u", (unsigned)t.value_u32);
           break;
