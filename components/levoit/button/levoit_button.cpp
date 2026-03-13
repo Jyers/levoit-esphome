@@ -47,7 +47,7 @@ namespace esphome
                 // Immediately publish updated filter life percent sensor and low binary sensor
                 this->parent_->publish_filter_stats_now();
 
-                ESP_LOGI(TAG, "Reset filter stats: used_cadr=0, total_runtime=0");
+                ESP_LOGI(TAG, "Reset Filter: used_cadr=0, total_runtime=0");
                 break;
             }
             default:
