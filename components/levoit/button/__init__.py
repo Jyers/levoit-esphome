@@ -11,11 +11,11 @@ LevoitButton = levoit_ns.class_("LevoitButton", button.Button, cg.Component)
 ButtonType = levoit_ns.enum("ButtonType")
 
 TYPE_MAP = {
-    "reset_filter_stats": ButtonType.RESET_FILTER_STATS,
+    "reset_filter": ButtonType.RESET_FILTER,
 }
 
 TYPE_DEFAULTS = {
-    "reset_filter_stats": {
+    "reset_filter": {
         CONF_DEVICE_CLASS: "reset",
         CONF_ICON: "mdi:air-filter",
     },

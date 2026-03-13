@@ -22,7 +22,7 @@ namespace esphome
     protected:
       void press_action() override;
       Levoit *parent_{nullptr};
-      ButtonType type_{ButtonType::RESET_FILTER_STATS};
+      ButtonType type_{ButtonType::RESET_FILTER};
     };
 
   } // namespace levoit

@@ -14,7 +14,7 @@ namespace esphome
             ESP_LOGD(TAG, "Setting up Levoit Button");
             switch (this->type_)
             {
-            case ButtonType::RESET_FILTER_STATS:
+            case ButtonType::RESET_FILTER:
                 this->set_entity_category(EntityCategory::ENTITY_CATEGORY_CONFIG);
                 break;
 
@@ -38,7 +38,7 @@ namespace esphome
 
             switch (this->type_)
             {
-            case ButtonType::RESET_FILTER_STATS:
+            case ButtonType::RESET_FILTER:
             {
                 // Reset CADR usage and total runtime, persist via setters
                 this->parent_->set_used_cadr(0.0f);

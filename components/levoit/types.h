@@ -83,9 +83,9 @@ namespace esphome
 
         enum class ButtonType : uint8_t
         {
-            RESET_FILTER_STATS = 0,
+            RESET_FILTER = 0,
         };
-        static constexpr ButtonType RESET_FILTER_STATS = ButtonType::RESET_FILTER_STATS;
+        static constexpr ButtonType RESET_FILTER = ButtonType::RESET_FILTER;
 
         enum class TextSensorType : uint8_t
         {

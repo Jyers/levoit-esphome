@@ -128,4 +128,4 @@ button:
   - platform: levoit
     levoit: levoit_device
     name: "Reset Filter"
-    type: reset_filter_stats
+    type: reset_filter
