@@ -4,7 +4,6 @@
 #include "types.h"
 #include "fan/levoit_fan.h"
 #include "sensor/levoit_sensor.h"
-#include "decoder_helpers.h"
 #include <vector>
 #include <string>
 
@@ -287,17 +286,14 @@ namespace esphome
           float initial_hours = initial_secs / 3600.0f;
           ESP_LOGV(TAG_SUP, "TimerInitial=%u sec (%.2f h)", (unsigned)initial_secs, initial_hours);
           self->publish_number(NumberType::TIMER, initial_hours);
-          self->publish_text_sensor(TextSensorType::TIMER_DURATION_INITIAL, format_duration_minutes(initial_secs / 60));
           break;
         }
         case 0x02:
         {
           uint32_t remaining_secs = t.value_u32;
           float remaining_hours = remaining_secs / 3600.0f;
-          uint16_t remaining_min = (uint16_t)remaining_secs / 60;
           ESP_LOGV(TAG_SUP, "TimerRemaining=%u sec (%.2f h)", (unsigned)remaining_secs, remaining_hours);
           self->publish_sensor(SensorType::TIMER_CURRENT, remaining_hours);
-          self->publish_text_sensor(TextSensorType::TIMER_DURATION_CURRENT, format_duration_minutes(remaining_min));
 
           if (remaining_secs > 0)
           {

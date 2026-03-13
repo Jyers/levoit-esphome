@@ -19,11 +19,13 @@ namespace esphome
         case SensorType::EFFICIENCY_COUNTER:
           this->set_device_class("duration");
           this->set_unit_of_measurement("s");
+          this->set_icon("mdi:counter");
           this->set_entity_category(EntityCategory::ENTITY_CATEGORY_DIAGNOSTIC);
           break;
         case SensorType::TIMER_CURRENT:
           this->set_device_class("duration");
           this->set_unit_of_measurement("h");
+          this->set_icon("mdi:timer-outline");
           this->set_accuracy_decimals(2);
           break;
         case SensorType::PM25:

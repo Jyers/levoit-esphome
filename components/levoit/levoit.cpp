@@ -20,7 +20,6 @@
 #include "core_commands.h"
 #include "vital_commands.h"
 #include "superior_commands.h"
-#include "decoder_helpers.h"
 #include "switch/levoit_switch.h"
 #include "fan/levoit_fan.h"
 #include "number/levoit_number.h"
@@ -169,9 +168,6 @@ namespace esphome
         }
         void Levoit::on_switch_command(SwitchType type, bool state)
         {
-            // Optional: restrict by model
-            // if (model_ != ModelType::VITAL200S && type == SwitchType::QUICK_CLEAN) return;
-
             switch (type)
             {
             case SwitchType::DISPLAY:
@@ -184,15 +180,6 @@ namespace esphome
 
             case SwitchType::LIGHT_DETECT:
                 this->sendCommand(state ? setLightDetectOn : setLightDetectOff);
-                break;
-
-            // You’ll need to add command types for these if not present yet:
-            case SwitchType::QUICK_CLEAN:
-                // TODO: sendCommand(state ? setQuickCleanOn : setQuickCleanOff);
-                break;
-
-            case SwitchType::WHITE_NOISE:
-                // TODO: sendCommand(state ? setWhiteNoiseOn : setWhiteNoiseOff);
                 break;
 
             case SwitchType::AUTO_DRY_POWER_OFF:
@@ -210,9 +197,6 @@ namespace esphome
 
         void Levoit::on_number_command(NumberType type, float value)
         {
-            // Optional: restrict by model
-            // if (model_ != ModelType::VITAL200S && type == NumberType::EFFICIENCY_ROOM_SIZE) return;
-
             switch (type)
             {
             case NumberType::TIMER:
@@ -224,17 +208,12 @@ namespace esphome
                     if (secs > 0)
                     {
                         this->start_esp_timer(secs);
-                        uint16_t mins = secs / 60;
-                        this->publish_text_sensor(TextSensorType::TIMER_DURATION_INITIAL, format_duration_minutes(mins));
-                        // Immediately publish timer remaining (same as initial at start)
                         this->publish_sensor(SensorType::TIMER_CURRENT, value);
-                        this->publish_text_sensor(TextSensorType::TIMER_DURATION_CURRENT, format_duration_minutes(mins));
                     }
                     else
                     {
                         this->stop_esp_timer();
                         this->publish_sensor(SensorType::TIMER_CURRENT, 0.0f);
-                        this->publish_text_sensor(TextSensorType::TIMER_DURATION_CURRENT, format_duration_minutes(0));
                     }
                 }
                 else
@@ -244,7 +223,7 @@ namespace esphome
                 break;
 
             case NumberType::EFFICIENCY_ROOM_SIZE:
-                this->sendCommand(setAutoModeEfficient); // takes value from number: Room Size
+                this->sendCommand(setAutoModeEfficient);
                 break;
 
             case NumberType::HUMIDITY_TARGET:
@@ -254,9 +233,6 @@ namespace esphome
         }
         void Levoit::on_select_command(SelectType type, uint32_t value)
         {
-            // Optional: restrict by model
-            // if (model_ != ModelType::VITAL200S && type == SwitchType::QUICK_CLEAN) return;
-
             switch (type)
             {
             case SelectType::AUTO_MODE:
@@ -270,20 +246,6 @@ namespace esphome
                     break;
                 case 2:
                     this->sendCommand(setAutoModeEfficient);
-                    break;
-                default:
-                    break;
-                }
-                break;
-
-            case SelectType::SLEEP_MODE:
-                switch (value)
-                {
-                case 0:
-                    this->sendCommand(setSleepModeDefault);
-                    break;
-                case 1:
-                    // this->sendCommand(setSleepModeCustom);
                     break;
                 default:
                     break;
@@ -320,7 +282,6 @@ namespace esphome
 
             case SelectType::DRY_LEVEL:
                 // Store the dry level preference for when Dry mode is selected from the fan entity
-                // Do not send a command to the MCU here; drying is only started via the fan entity mode change
                 this->dry_level_preference_ = (value <= 1) ? value : 0;
                 break;
 
@@ -331,8 +292,6 @@ namespace esphome
         void Levoit::on_fan_command(int power, int speed_level, int mode)
         {
             ESP_LOGD(TAG, "on_fan_command: power=%d speed_level=%d mode=%d", power, speed_level, mode);
-            // Optional: restrict by model
-            // if (model_ != ModelType::VITAL200S && type == SwitchType::QUICK_CLEAN) return;
 
             if (power != -1)
             {
@@ -424,21 +383,22 @@ namespace esphome
         }
         void Levoit::setup()
         {
-            ESP_LOGI(TAG, "Setting up Levoit %s", model_ == ModelType::VITAL200S ? "VITAL200S" : "VITAL100S");
-            //https://docs.google.com/spreadsheets/d/17j6FZwvqHRFkGoH5996u5JdR7tk4_7fNuTxAK7kc4Fk/edit?gid=1612245341#gid=1612245341
+            ESP_LOGI(TAG, "Setting up Levoit %s", model_ == ModelType::VITAL200S ? "VITAL200S" : 
+                     model_ == ModelType::VITAL100S ? "VITAL100S" :
+                     model_ == ModelType::CORE300S ? "CORE300S" :
+                     model_ == ModelType::CORE400S ? "CORE400S" :
+                     model_ == ModelType::SUPERIOR6000S ? "SUPERIOR6000S" : "UNKNOWN");
+
+            // CADR values per model (m³/h)
             if (model_ == ModelType::VITAL200S)
                 cadr = 415;
-            if (model_ == ModelType::VITAL100S)
+            else if (model_ == ModelType::VITAL100S)
                 cadr = 221;
-            if (model_ == ModelType::CORE300S)
-                cadr = 214; 
-            if (model_ == ModelType::CORE400S)
+            else if (model_ == ModelType::CORE300S)
+                cadr = 214;
+            else if (model_ == ModelType::CORE400S)
                 cadr = 415;
-            if (model_ == ModelType::CORE200S)
-                cadr = 167;
-            if (model_ == ModelType::CORE600S)
-                cadr = 641;
-            if (model_ == ModelType::SUPERIOR6000S)
+            else if (model_ == ModelType::SUPERIOR6000S)
                 cadr = 500;
             
             // Initialize preferences for tracking used_cadr and total_runtime
@@ -638,7 +598,6 @@ namespace esphome
                     esp_timer_last_update_ = now;
                     uint32_t elapsed_secs = (now - esp_timer_start_millis_) / 1000;
                     uint32_t remaining = (elapsed_secs >= esp_timer_duration_secs_) ? 0 : (esp_timer_duration_secs_ - elapsed_secs);
-                    uint16_t remaining_min = remaining / 60;
                     float remaining_hours = remaining / 3600.0f;
 
                     if (remaining > 0)
@@ -646,7 +605,6 @@ namespace esphome
                         ESP_LOGD(TAG, "ESP timer update: %u sec remaining", remaining);
                         this->send_timer_update(remaining);
                         this->publish_sensor(SensorType::TIMER_CURRENT, remaining_hours);
-                        this->publish_text_sensor(TextSensorType::TIMER_DURATION_CURRENT, format_duration_minutes(remaining_min));
                     }
                     else
                     {
@@ -663,7 +621,6 @@ namespace esphome
                             this->stop_esp_timer();
                             this->publish_number(NumberType::TIMER, 0.0f);
                             this->publish_sensor(SensorType::TIMER_CURRENT, 0.0f);
-                            this->publish_text_sensor(TextSensorType::TIMER_DURATION_CURRENT, format_duration_minutes(0));
                             this->sendCommand(setDeviceOFF);
                         }
                     }

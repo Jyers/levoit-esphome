@@ -1,8 +1,8 @@
-# Example configuration for Levoit Core 400S Air Purifier
+# Example configuration for Levoit Vital 200S Air Purifier
 # Replace GPIO pins with the correct ones for your device
 
 substitutions:
-  name: "levoit-core400s"
+  name: "levoit-vital200s"
 
 esphome:
   name: ${name}
@@ -28,7 +28,7 @@ wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
   ap:
-    ssid: "Levoit-Core400S"
+    ssid: "Levoit-Vital200S"
     password: !secret ap_password
 
 captive_portal:
@@ -45,7 +45,7 @@ uart:
 
 levoit:
   id: levoit_device
-  model: CORE400S
+  model: VITAL200S
 
 fan:
   - platform: levoit
@@ -61,6 +61,10 @@ switch:
     levoit: levoit_device
     name: "Child Lock"
     type: child_lock
+  - platform: levoit
+    levoit: levoit_device
+    name: "Light Detect"
+    type: light_detect
 
 number:
   - platform: levoit
@@ -97,6 +101,10 @@ sensor:
     levoit: levoit_device
     name: "Timer Remaining"
     type: timer_current
+  - platform: levoit
+    levoit: levoit_device
+    name: "Efficiency Counter"
+    type: efficiency_counter
 
 select:
   - platform: levoit

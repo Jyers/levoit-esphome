@@ -13,15 +13,8 @@ NumberType = levoit_ns.enum("NumberType")
 TYPE_MAP = {
     "timer": NumberType.TIMER,
     "efficiency_room_size": NumberType.EFFICIENCY_ROOM_SIZE,
-     #VITALS only below
-    "quick_clean_min": NumberType.QUICK_CLEAN_MIN,
-    "white_noise_min": NumberType.WHITE_NOISE_MIN,
-    "sleep_mode_min": NumberType.SLEEP_MODE_MIN,
-    "quick_clean_fan_level": NumberType.QUICK_CLEAN_FAN_LEVEL,
-    "white_noise_fan_level": NumberType.WHITE_NOISE_FAN_LEVEL,
-    "sleep_mode_fan_mode_level": NumberType.SLEEP_MODE_FAN_MODE_LEVEL,
     "filter_lifetime_months": NumberType.FILTER_LIFETIME_MONTHS,
-    # Superior only below
+    # Superior only
     "humidity_target": NumberType.HUMIDITY_TARGET,
 }
   

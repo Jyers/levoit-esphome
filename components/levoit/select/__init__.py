@@ -14,25 +14,15 @@ SelectType = levoit_ns.enum("SelectType")
 
 TYPE_MAP = {
     "auto_mode": SelectType.AUTO_MODE,
-    "sleep_mode": SelectType.SLEEP_MODE,
-    "quick_clean_fan_level": SelectType.QUICK_CLEAN_FAN_LEVEL,
-    "white_noise_fan_level": SelectType.WHITE_NOISE_FAN_LEVEL,
-    "sleep_mode_fan_mode_level": SelectType.SLEEP_MODE_FAN_MODE_LEVEL,  
-    "daytime_fan_mode_level": SelectType.DAYTIME_FAN_MODE_LEVEL,
-    # Superior only below
+    # Superior only
     "auto_profile": SelectType.AUTO_PROFILE,
     "humidity_subtype": SelectType.HUMIDITY_SUBTYPE,
     "dry_level": SelectType.DRY_LEVEL,
 }
 
 ICON_MAP = {
-    "auto_mode": None,
-    "sleep_mode": None,
-    "quick_clean_fan_level": None,
-    "white_noise_fan_level": None,
-    "sleep_mode_fan_mode_level": None,
-    "daytime_fan_mode_level": None,
-    "auto_profile": "mdi:auto-mode",
+    "auto_mode": "mdi:fan-auto",
+    "auto_profile": "mdi:home-account",
     "humidity_subtype": "mdi:cloud-percent",
     "dry_level": "mdi:fan",
 }

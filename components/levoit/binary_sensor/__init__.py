@@ -20,7 +20,7 @@ TYPE_MAP = {
 }
 
 ICON_MAP = {
-    "filter_low": None,
+    "filter_low": "mdi:air-filter",
     "cover_removed": "mdi:window-open",
     "water_tank_empty": "mdi:waves-arrow-up",
     "dry_active": "mdi:hair-dryer",

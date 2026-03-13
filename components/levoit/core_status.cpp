@@ -1,9 +1,8 @@
 #include "core_status.h"
 #include "esphome/core/log.h"
-#include "tlv.h" // <- TLV extraction
+#include "tlv.h"
 #include "types.h"
 #include "fan/levoit_fan.h"
-#include "decoder_helpers.h"
 #include <vector>
 #include <string>
 
@@ -27,8 +26,6 @@ namespace esphome
       uint32_t remaining_sec = payload[0] | (payload[1] << 8) | (payload[2] << 16) | (payload[3] << 24);
       uint32_t initial_sec = payload[4] | (payload[5] << 8) | (payload[6] << 16) | (payload[7] << 24);
 
-      uint16_t remaining_min = remaining_sec / 60;
-      uint16_t initial_min = initial_sec / 60;
       float remaining_hours = remaining_sec / 3600.0f;
       float initial_hours = initial_sec / 3600.0f;
 
@@ -36,9 +33,7 @@ namespace esphome
                remaining_sec, remaining_hours, initial_sec, initial_hours);
 
       self->publish_number(NumberType::TIMER, initial_hours);
-      self->publish_text_sensor(TextSensorType::TIMER_DURATION_INITIAL, format_duration_minutes(initial_min));
       self->publish_sensor(SensorType::TIMER_CURRENT, remaining_hours);
-      self->publish_text_sensor(TextSensorType::TIMER_DURATION_CURRENT, format_duration_minutes(remaining_min));
 
       if (remaining_sec > 0)
       {
@@ -74,18 +69,19 @@ namespace esphome
       bool power = payload[3] != 0;
       uint32_t fan_mode = payload[4];
       uint8_t aqi = payload[10];
-      float pm25 = static_cast<float>((payload[12] << 8) | payload[11]); // 2 bytes: little-endian (low byte at 11, high byte at 12)
+      float pm25 = static_cast<float>((payload[12] << 8) | payload[11]);
       bool child_lock = payload[13] != 0;
       uint8_t fan_auto_mode = payload[14];
-      uint16_t efficency_area = (payload[16] << 8) | payload[15]; // 2 bytes: little-endian (low byte at 15, high byte at 16)
-      bool has_error = payload[17] != 0; //filter error? nopt connected
-      // display and fan speed differ between CORE300S and CORE400S or maybe based on firmware version?!?
+      uint16_t efficency_area = (payload[16] << 8) | payload[15];
+      bool has_error = payload[17] != 0;
+
+      // Display and fan speed byte positions differ between Core models
       bool display_on = false;
       uint8_t fan_speed = 0;
       if (model == ModelType::CORE300S)
       {
         display_on = payload[6] != 0;
-        fan_speed = payload[5]; // byte 8 for CORE300S with 2.0.11 fw but 5 also works, not updated during auto mode
+        fan_speed = payload[5];
       }
       else if (model == ModelType::CORE400S)
       {
@@ -93,16 +89,12 @@ namespace esphome
         display_on = payload[7] != 0;
       }
 
-      // publish state to ESPHome entities
+      // Publish state to ESPHome entities
       self->publish_text_sensor(TextSensorType::MCU_VERSION, std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(patch));
-      if(has_error)
-      {
+      if (has_error)
         self->publish_text_sensor(TextSensorType::ERROR_MESSAGE, "Sensor error");
-      }
       else
-      {
-        self->publish_text_sensor(TextSensorType::ERROR_MESSAGE, "Ok"); // clear error message
-      }
+        self->publish_text_sensor(TextSensorType::ERROR_MESSAGE, "Ok");
       self->publish_switch(SwitchType::CHILD_LOCK, child_lock);
       self->publish_switch(SwitchType::DISPLAY, display_on);
       self->publish_sensor(SensorType::AQI, (unsigned)aqi);

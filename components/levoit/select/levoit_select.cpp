@@ -11,43 +11,19 @@ namespace esphome
     static const char *const TAG = "levoit.select";
 
     void LevoitSelect::setup() {
-      // pick default
       this->set_entity_category(EntityCategory::ENTITY_CATEGORY_CONFIG);
 
       switch (this->type_) {
         case SelectType::AUTO_MODE: 
-
           this->traits.set_options({"Default","Quiet","Room Size"});
           break;
-        case SelectType::SLEEP_MODE:
-          this->traits.set_options({"Default","Custom"}); 
-          break;
-        case SelectType::QUICK_CLEAN_FAN_LEVEL:
-          this->set_entity_category(EntityCategory::ENTITY_CATEGORY_CONFIG);
-          this->traits.set_options({"Low","Medium","High","Highest","Minimum"}); 
-          break;
-        case SelectType::WHITE_NOISE_FAN_LEVEL:
-          this->set_entity_category(EntityCategory::ENTITY_CATEGORY_CONFIG);
-          this->traits.set_options({"Low","Medium","High","Highest","Minimum"});  
-          break;
-        case SelectType::SLEEP_MODE_FAN_MODE_LEVEL:
-          this->set_entity_category(EntityCategory::ENTITY_CATEGORY_CONFIG);
-          this->traits.set_options({"Low","Medium","High","Highest","Minimum"});    
-          break;
-        case SelectType::DAYTIME_FAN_MODE_LEVEL:
-          this->set_entity_category(EntityCategory::ENTITY_CATEGORY_CONFIG);
-          this->traits.set_options({"Auto","Low","Medium","High","Highest","Pet"});
-          break;
         case SelectType::AUTO_PROFILE:
-          this->set_entity_category(EntityCategory::ENTITY_CATEGORY_CONFIG);
           this->traits.set_options({"Home","Away"});
           break;
         case SelectType::HUMIDITY_SUBTYPE:
-          this->set_entity_category(EntityCategory::ENTITY_CATEGORY_CONFIG);
           this->traits.set_options({"Smart","Fan"});
           break;
         case SelectType::DRY_LEVEL:
-          this->set_entity_category(EntityCategory::ENTITY_CATEGORY_CONFIG);
           this->traits.set_options({"Low","High"});
           break;
         default:
