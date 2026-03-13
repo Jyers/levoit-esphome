@@ -15,24 +15,14 @@ namespace esphome
             switch (this->type_)
             {
             case BinarySensorType::FILTER_LOW:
-                this->set_device_class("problem");
-                this->set_icon("mdi:air-filter");
                 break;
             case BinarySensorType::COVER_REMOVED:
-                this->set_device_class("opening");
-                this->set_icon("mdi:window-open");
                 break;
             case BinarySensorType::DRY_ACTIVE:
-                this->set_device_class("running");
-                this->set_icon("mdi:hair-dryer");
                 break;
             case BinarySensorType::HUMIDIFYING:
-                this->set_device_class("running");
-                this->set_icon("mdi:air-humidifier");
                 break;
             case BinarySensorType::WATER_TANK_EMPTY:
-                this->set_device_class("problem");
-                this->set_icon("mdi:waves-arrow-up");
                 break;
             default:
                 break;

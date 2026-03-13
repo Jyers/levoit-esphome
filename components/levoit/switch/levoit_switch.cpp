@@ -12,19 +12,14 @@ namespace esphome
       switch (this->type_)
       {
       case SwitchType::DISPLAY:
-        this->set_icon("mdi:brightness-7");
         break;
       case SwitchType::CHILD_LOCK:
-        this->set_icon("mdi:lock-outline");
         break;
       case SwitchType::LIGHT_DETECT:
-        this->set_icon("mdi:lightbulb-auto-outline");
         break;
       case SwitchType::AUTO_DRY_POWER_OFF:
-        this->set_icon("mdi:fan-auto");
         break;
       case SwitchType::AUTO_DRY_WATER_EMPTY:
-        this->set_icon("mdi:fan-auto");
         break;
       default:
         break;

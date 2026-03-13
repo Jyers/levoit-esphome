@@ -18,6 +18,24 @@ TYPE_MAP = {
     "auto_dry_water_empty": SwitchType.AUTO_DRY_WATER_EMPTY,
 }
 
+TYPE_DEFAULTS = {
+    "display": {
+        CONF_ICON: "mdi:brightness-7",
+    },
+    "child_lock": {
+        CONF_ICON: "mdi:lock-outline",
+    },
+    "light_detect": {
+        CONF_ICON: "mdi:lightbulb-auto-outline",
+    },
+    "auto_dry_power_off": {
+        CONF_ICON: "mdi:fan-auto",
+    },
+    "auto_dry_water_empty": {
+        CONF_ICON: "mdi:fan-auto",
+    },
+}
+
 CONFIG_SCHEMA = switch.switch_schema(LevoitSwitch).extend(
     {
         cv.Required(CONF_LEVOIT_ID): cv.use_id(Levoit),
@@ -31,6 +49,10 @@ async def to_code(config):
     parent = await cg.get_variable(config[CONF_LEVOIT_ID])
 
     switch_type = config[CONF_TYPE]
+
+    config = dict(config)
+    for key, value in TYPE_DEFAULTS.get(switch_type, {}).items():
+        config.setdefault(key, value)
 
     var = cg.new_Pvariable(config[CONF_ID])
     await switch.register_switch(var, config)

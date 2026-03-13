@@ -16,8 +16,6 @@ namespace esphome
             {
             case ButtonType::RESET_FILTER_STATS:
                 this->set_entity_category(EntityCategory::ENTITY_CATEGORY_CONFIG);
-                this->set_device_class("reset");
-                this->set_icon("mdi:air-filter");
                 break;
 
             default:

@@ -18,6 +18,18 @@ TYPE_MAP = {
     "error_message": TextSensorType.ERROR_MESSAGE,
 }
 
+TYPE_DEFAULTS = {
+    "mcu_version": {
+        CONF_ICON: "mdi:chip",
+    },
+    "esp_version": {
+        CONF_ICON: "mdi:chip",
+    },
+    "error_message": {
+        CONF_ICON: "mdi:alert-circle-outline",
+    },
+}
+
 
 CONFIG_SCHEMA = text_sensor.text_sensor_schema(LevoitTextSensor).extend(
     {
@@ -31,6 +43,10 @@ CONFIG_SCHEMA = text_sensor.text_sensor_schema(LevoitTextSensor).extend(
 async def to_code(config):
     parent = await cg.get_variable(config[CONF_LEVOIT_ID])
     sensor_type = config[CONF_TYPE]
+
+    config = dict(config)
+    for key, value in TYPE_DEFAULTS.get(sensor_type, {}).items():
+        config.setdefault(key, value)
 
     var = cg.new_Pvariable(config[CONF_ID])
     await text_sensor.register_text_sensor(var, config)

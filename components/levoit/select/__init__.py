@@ -19,6 +19,21 @@ TYPE_MAP = {
     "dry_level": SelectType.DRY_LEVEL,
 }
 
+TYPE_DEFAULTS = {
+    "auto_mode": {
+        CONF_ICON: "mdi:fan-auto",
+    },
+    "auto_profile": {
+        CONF_ICON: "mdi:home-account",
+    },
+    "humidity_subtype": {
+        CONF_ICON: "mdi:cloud-percent",
+    },
+    "dry_level": {
+        CONF_ICON: "mdi:fan",
+    },
+}
+
 CONFIG_SCHEMA = select.select_schema(LevoitSelect).extend(
     {
         cv.Required(CONF_LEVOIT_ID): cv.use_id(Levoit),
@@ -30,8 +45,13 @@ CONFIG_SCHEMA = select.select_schema(LevoitSelect).extend(
 
 async def to_code(config):
     parent = await cg.get_variable(config[CONF_LEVOIT_ID])
-    var = cg.new_Pvariable(config[CONF_ID])
     ntype = config[CONF_TYPE]
+
+    config = dict(config)
+    for key, value in TYPE_DEFAULTS.get(ntype, {}).items():
+        config.setdefault(key, value)
+
+    var = cg.new_Pvariable(config[CONF_ID])
 
     await select.register_select(var, config, options=["Default"])
     await cg.register_component(var, config)

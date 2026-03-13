@@ -1,9 +1,9 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import button
-from esphome.const import CONF_ID
+from esphome.const import CONF_DEVICE_CLASS, CONF_ICON, CONF_ID
 
-from .. import Levoit, CONF_LEVOIT_ID, levoit_ns
+from .. import CONF_LEVOIT_ID, Levoit, levoit_ns
 
 CONF_TYPE = "type"
 
@@ -14,6 +14,13 @@ TYPE_MAP = {
     "reset_filter_stats": ButtonType.RESET_FILTER_STATS,
 }
 
+TYPE_DEFAULTS = {
+    "reset_filter_stats": {
+        CONF_DEVICE_CLASS: "reset",
+        CONF_ICON: "mdi:air-filter",
+    },
+}
+
 CONFIG_SCHEMA = button.button_schema(LevoitButton).extend(
     {
         cv.Required(CONF_LEVOIT_ID): cv.use_id(Levoit),
@@ -21,8 +28,14 @@ CONFIG_SCHEMA = button.button_schema(LevoitButton).extend(
     }
 )
 
+
 async def to_code(config):
     parent = await cg.get_variable(config[CONF_LEVOIT_ID])
+    btype = config[CONF_TYPE]
+
+    config = dict(config)
+    for key, value in TYPE_DEFAULTS.get(btype, {}).items():
+        config.setdefault(key, value)
 
     var = cg.new_Pvariable(config[CONF_ID])
     await button.register_button(var, config)
@@ -30,6 +43,6 @@ async def to_code(config):
 
     cg.add(var.set_parent(parent))
 
-    bt = TYPE_MAP[config[CONF_TYPE]]
+    bt = TYPE_MAP[btype]
     cg.add(var.set_type(bt))
     cg.add(parent.register_button(bt, var))

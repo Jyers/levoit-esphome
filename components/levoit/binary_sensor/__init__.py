@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import binary_sensor
-from esphome.const import CONF_ICON, CONF_ID
+from esphome.const import CONF_DEVICE_CLASS, CONF_ICON, CONF_ID
 
 from .. import CONF_LEVOIT_ID, Levoit, levoit_ns
 
@@ -21,6 +21,29 @@ TYPE_MAP = {
     "humidifying": BinarySensorType.HUMIDIFYING,
 }
 
+TYPE_DEFAULTS = {
+    "filter_low": {
+        CONF_DEVICE_CLASS: "problem",
+        CONF_ICON: "mdi:air-filter",
+    },
+    "cover_removed": {
+        CONF_DEVICE_CLASS: "opening",
+        CONF_ICON: "mdi:window-open",
+    },
+    "dry_active": {
+        CONF_DEVICE_CLASS: "running",
+        CONF_ICON: "mdi:hair-dryer",
+    },
+    "humidifying": {
+        CONF_DEVICE_CLASS: "running",
+        CONF_ICON: "mdi:air-humidifier",
+    },
+    "water_tank_empty": {
+        CONF_DEVICE_CLASS: "problem",
+        CONF_ICON: "mdi:waves-arrow-up",
+    },
+}
+
 CONFIG_SCHEMA = binary_sensor.binary_sensor_schema(LevoitBinarySensor).extend(
     {
         cv.Required(CONF_LEVOIT_ID): cv.use_id(Levoit),
@@ -33,6 +56,10 @@ CONFIG_SCHEMA = binary_sensor.binary_sensor_schema(LevoitBinarySensor).extend(
 async def to_code(config):
     parent = await cg.get_variable(config[CONF_LEVOIT_ID])
     sensor_type = config[CONF_TYPE]
+
+    config = dict(config)
+    for key, value in TYPE_DEFAULTS.get(sensor_type, {}).items():
+        config.setdefault(key, value)
 
     var = cg.new_Pvariable(config[CONF_ID])
     await binary_sensor.register_binary_sensor(var, config)

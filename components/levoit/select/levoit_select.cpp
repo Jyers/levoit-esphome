@@ -18,19 +18,15 @@ namespace esphome
       {
       case SelectType::AUTO_MODE:
         this->traits.set_options({"Default", "Quiet", "Room Size"});
-        this->set_icon("mdi:fan-auto");
         break;
       case SelectType::AUTO_PROFILE:
         this->traits.set_options({"Home", "Away"});
-        this->set_icon("mdi:home-account");
         break;
       case SelectType::HUMIDITY_SUBTYPE:
         this->traits.set_options({"Smart", "Fan"});
-        this->set_icon("mdi:cloud-percent");
         break;
       case SelectType::DRY_LEVEL:
         this->traits.set_options({"Low", "High"});
-        this->set_icon("mdi:fan");
         break;
       default:
         break;
