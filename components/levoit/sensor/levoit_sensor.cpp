@@ -62,6 +62,12 @@ namespace esphome
           this->set_unit_of_measurement("%");
           this->set_accuracy_decimals(0);
           break;
+        case SensorType::DRY_TIME_REMAINING:
+          this->set_device_class("duration");
+          this->set_unit_of_measurement("s");
+          this->set_icon("mdi:timer-sand");
+          this->set_accuracy_decimals(0);
+          break;
         default:
           break;
       }

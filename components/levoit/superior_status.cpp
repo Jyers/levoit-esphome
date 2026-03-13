@@ -47,9 +47,7 @@ namespace esphome
         switch (t.tag)
         {
         case 0x00:
-          ESP_LOGV(TAG_SUP, "Power=%u", (unsigned)t.value_u32);
-          have_power = true;
-          power = (t.value_u32 == 1);
+          ESP_LOGV(TAG_SUP, "ID=%u (0x%02X)", (unsigned)t.value_u32, (unsigned)t.value_u32);
           break;
 
         case 0x01:
@@ -66,6 +64,12 @@ namespace esphome
           }
           break;
         }
+
+        case 0x02:
+          ESP_LOGV(TAG_SUP, "Power=%u", (unsigned)t.value_u32);
+          have_power = true;
+          power = (t.value_u32 == 1);
+          break;
 
         case 0x03:
           ESP_LOGV(TAG_SUP, "CoverRemoved=%u", (unsigned)t.value_u32);
@@ -157,6 +161,9 @@ namespace esphome
             have_dry_active = true;
             dry_active = (dry_active_flag == 1);
             self->publish_binary_sensor(BinarySensorType::DRY_ACTIVE, dry_active);
+
+            // Publish dry time remaining as sensor (in seconds)
+            self->publish_sensor(SensorType::DRY_TIME_REMAINING, dry_remaining);
 
             // Dry level: 01=Low(idx 0), 02=High(idx 1)
             if (dry_level >= 1 && dry_level <= 2)

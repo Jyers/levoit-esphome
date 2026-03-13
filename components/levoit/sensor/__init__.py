@@ -21,6 +21,7 @@ TYPE_MAP = {
     "humidity": SensorType.HUMIDITY,
     "temperature": SensorType.TEMPERATURE,
     "filter_life_mcu": SensorType.FILTER_LIFE_MCU,
+    "dry_time_remaining": SensorType.DRY_TIME_REMAINING,
 }
   
 
