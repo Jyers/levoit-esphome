@@ -281,8 +281,20 @@ namespace esphome
                 break;
 
             case SelectType::DRY_LEVEL:
-                // Store the dry level preference for when Dry mode is selected from the fan entity
+                // Always store the preference; only resend a dry command if Dry mode is currently active.
                 this->dry_level_preference_ = (value <= 1) ? value : 0;
+
+                if (this->fan_ != nullptr)
+                {
+                    esphome::StringRef preset = this->fan_->get_preset_mode();
+                    if (!preset.empty() && preset == "Dry")
+                    {
+                        if (this->dry_level_preference_ == 1)
+                            this->sendCommand(setDryLevelHigh);
+                        else
+                            this->sendCommand(setDryLevelLow);
+                    }
+                }
                 break;
 
             default:
