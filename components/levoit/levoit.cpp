@@ -608,21 +608,11 @@ namespace esphome
                     }
                     else
                     {
-                        // Timer expired - send 5 zero commands
-                        if (esp_timer_zero_count_ < 5)
-                        {
-                            ESP_LOGD(TAG, "ESP timer expired, sending zero command %u/5", esp_timer_zero_count_ + 1);
-                            this->send_timer_update(0);
-                            esp_timer_zero_count_++;
-                        }
-                        else
-                        {
-                            ESP_LOGI(TAG, "ESP timer finished, turning off device");
-                            this->stop_esp_timer();
-                            this->publish_number(NumberType::TIMER, 0.0f);
-                            this->publish_sensor(SensorType::TIMER_CURRENT, 0.0f);
-                            this->sendCommand(setDeviceOFF);
-                        }
+                        ESP_LOGI(TAG, "ESP timer finished, turning off device");
+                        this->stop_esp_timer();
+                        this->publish_number(NumberType::TIMER, 0.0f);
+                        this->publish_sensor(SensorType::TIMER_CURRENT, 0.0f);
+                        this->sendCommand(setDeviceOFF);
                     }
                 }
             }
@@ -908,14 +898,12 @@ namespace esphome
             esp_timer_start_millis_ = millis();
             esp_timer_duration_secs_ = duration_secs;
             esp_timer_last_update_ = esp_timer_start_millis_;
-            esp_timer_zero_count_ = 0;
             ESP_LOGI(TAG, "ESP timer started: %u seconds", duration_secs);
         }
 
         void Levoit::stop_esp_timer()
         {
             esp_timer_active_ = false;
-            esp_timer_zero_count_ = 0;
             ESP_LOGI(TAG, "ESP timer stopped");
         }
 

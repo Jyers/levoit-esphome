@@ -136,7 +136,6 @@ class Levoit : public Component, public uart::UARTDevice {
   uint32_t esp_timer_start_millis_{0};
   uint32_t esp_timer_duration_secs_{0};
   uint32_t esp_timer_last_update_{0};
-  uint8_t esp_timer_zero_count_{0};
   
   // Dry mode preference (for superior devices)
   // 0 = Low, 1 = High
