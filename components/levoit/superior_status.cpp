@@ -162,8 +162,9 @@ namespace esphome
             dry_active = (dry_active_flag == 1);
             self->publish_binary_sensor(BinarySensorType::DRY_ACTIVE, dry_active);
 
-            // Publish dry time remaining as sensor (in seconds)
-            self->publish_sensor(SensorType::DRY_TIME_REMAINING, dry_remaining);
+            // Publish dry time remaining in hours.
+            float dry_remaining_hours = dry_remaining / 3600.0f;
+            self->publish_sensor(SensorType::DRY_TIME_REMAINING, dry_remaining_hours);
 
             // Dry level: 01=Low(idx 0), 02=High(idx 1)
             if (dry_level >= 1 && dry_level <= 2)
@@ -246,10 +247,18 @@ namespace esphome
         {
           switch (mode)
           {
-          case 1: mod = 0; break; // Manual
-          case 2: mod = 1; break; // Sleep
-          case 3: mod = 3; break; // Humidity
-          case 4: mod = 2; break; // Auto
+          case 1:
+            mod = 0;
+            break; // Manual
+          case 2:
+            mod = 1;
+            break; // Sleep
+          case 3:
+            mod = 3;
+            break; // Humidity
+          case 4:
+            mod = 2;
+            break; // Auto
           default:
             ESP_LOGW(TAG_SUP, "Unexpected MCU mode value: %u", (unsigned)mode);
             break;
@@ -264,9 +273,9 @@ namespace esphome
     }
 
     void decode_superior_timer(Levoit *self,
-                              ModelType model,
-                              const uint8_t *payload,
-                              size_t payload_len)
+                               ModelType model,
+                               const uint8_t *payload,
+                               size_t payload_len)
     {
       if (self == nullptr || !payload || payload_len == 0)
         return;
