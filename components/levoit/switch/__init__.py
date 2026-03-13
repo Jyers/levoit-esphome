@@ -21,7 +21,7 @@ TYPE_MAP = {
 ICON_MAP = {
     "display": "mdi:brightness-7",
     "child_lock": "mdi:lock-outline",
-    "light_detect": "mdi:brightness-auto",
+    "light_detect": "mdi:lightbulb-auto-outline",
     "auto_dry_power_off": "mdi:fan-auto",
     "auto_dry_water_empty": "mdi:fan-auto",
 }

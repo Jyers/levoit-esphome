@@ -21,8 +21,8 @@ TYPE_MAP = {
 }
 
 ICON_MAP = {
-    "auto_mode": "mdi:auto-mode",
-    "auto_profile": "mdi:auto-mode",
+    "auto_mode": "mdi:fan-auto",
+    "auto_profile": "mdi:home-account",
     "humidity_subtype": "mdi:cloud-percent",
     "dry_level": "mdi:fan",
 }
