@@ -169,8 +169,6 @@ namespace esphome
             else
               self->publish_text_sensor(TextSensorType::ERROR_MESSAGE, "Ok");
           }
-          }
-            
           break;
         case 0x0B:
           ESP_LOGV(TAG_VITAL, "PM2.5=%u", (unsigned)t.value_u32);
