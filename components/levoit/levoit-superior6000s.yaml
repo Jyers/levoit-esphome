@@ -109,6 +109,10 @@ sensor:
     levoit: levoit_device
     name: "Timer Remaining"
     type: timer_current
+  - platform: levoit
+    levoit: levoit_device
+    name: "Dry Time Remaining"
+    type: dry_time_remaining
 
 select:
   - platform: levoit
