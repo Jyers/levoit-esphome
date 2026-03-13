@@ -13,18 +13,12 @@ TextSensorType = levoit_ns.enum("TextSensorType")
 TYPE_MAP = {
     "mcu_version": TextSensorType.MCU_VERSION,
     "esp_version": TextSensorType.ESP_VERSION,
-    "timer_duration_initial": TextSensorType.TIMER_DURATION_INITIAL,
-    "timer_duration_remaining": TextSensorType.TIMER_DURATION_CURRENT,
-    "auto_mode_room_size_high_fan": TextSensorType.AUTO_MODE_ROOM_SIZE_HIGH_FAN,
     "error_message": TextSensorType.ERROR_MESSAGE,
 }
 
 ICON_MAP = {
     "mcu_version": "mdi:chip",
     "esp_version": "mdi:chip",
-    "timer_duration_initial": "mdi:timer",
-    "timer_duration_remaining": "mdi:progress-clock",
-    "auto_mode_room_size_high_fan": None,
     "error_message": "mdi:alert-circle-outline",
 }
   

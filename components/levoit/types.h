@@ -12,29 +12,20 @@ namespace esphome
             VITAL200S = 1,
             CORE300S = 2,
             CORE400S = 3,
-            CORE200S = 4,
-            CORE600S = 5,
-            SUPERIOR6000S = 6
+            SUPERIOR6000S = 4,
         };
 
         enum class SwitchType : uint8_t
         {
             DISPLAY = 0,
             CHILD_LOCK = 1,
-            LIGHT_DETECT = 2,
-            QUICK_CLEAN = 3,
-            WHITE_NOISE = 4,
-            DAYTIME_ENABLED = 5,
-            AUTO_DRY_POWER_OFF = 6,
-            AUTO_DRY_WATER_EMPTY = 7
+            LIGHT_DETECT = 2,        // Vital only
+            AUTO_DRY_POWER_OFF = 3,  // Superior only
+            AUTO_DRY_WATER_EMPTY = 4 // Superior only
         };
-        // SwitchType aliases (flat namespace)
         static constexpr SwitchType DISPLAY = SwitchType::DISPLAY;
         static constexpr SwitchType CHILD_LOCK = SwitchType::CHILD_LOCK;
         static constexpr SwitchType LIGHT_DETECT = SwitchType::LIGHT_DETECT;
-        static constexpr SwitchType QUICK_CLEAN = SwitchType::QUICK_CLEAN;
-        static constexpr SwitchType WHITE_NOISE = SwitchType::WHITE_NOISE;
-        static constexpr SwitchType DAYTIME_ENABLED = SwitchType::DAYTIME_ENABLED;
         static constexpr SwitchType AUTO_DRY_POWER_OFF = SwitchType::AUTO_DRY_POWER_OFF;
         static constexpr SwitchType AUTO_DRY_WATER_EMPTY = SwitchType::AUTO_DRY_WATER_EMPTY;
 
@@ -42,23 +33,12 @@ namespace esphome
         {
             TIMER = 0,
             EFFICIENCY_ROOM_SIZE = 1,
-            QUICK_CLEAN_MIN = 2,
-            WHITE_NOISE_MIN = 3,
-            SLEEP_MODE_MIN = 4,
-            FILTER_LIFETIME_MONTHS = 5,
-            USED_CADR = 6,
-            TOTAL_RUNTIME = 7,
-            HUMIDITY_TARGET = 8,
+            FILTER_LIFETIME_MONTHS = 2,
+            HUMIDITY_TARGET = 3, // Superior only
         };
-        // NumberType aliases (flat namespace)
         static constexpr NumberType TIMER = NumberType::TIMER;
         static constexpr NumberType EFFICIENCY_ROOM_SIZE = NumberType::EFFICIENCY_ROOM_SIZE;
-        static constexpr NumberType QUICK_CLEAN_MIN = NumberType::QUICK_CLEAN_MIN;
-        static constexpr NumberType WHITE_NOISE_MIN = NumberType::WHITE_NOISE_MIN;
-        static constexpr NumberType SLEEP_MODE_MIN = NumberType::SLEEP_MODE_MIN;
         static constexpr NumberType FILTER_LIFETIME_MONTHS = NumberType::FILTER_LIFETIME_MONTHS;
-        static constexpr NumberType USED_CADR = NumberType::USED_CADR;
-        static constexpr NumberType TOTAL_RUNTIME = NumberType::TOTAL_RUNTIME;
         static constexpr NumberType HUMIDITY_TARGET = NumberType::HUMIDITY_TARGET;
 
         enum class SensorType : uint8_t
@@ -66,14 +46,13 @@ namespace esphome
             AQI = 0,
             PM25 = 1,
             TIMER_CURRENT = 2,
-            EFFICIENCY_COUNTER = 3,
+            EFFICIENCY_COUNTER = 3,  // Vital only
             CURRENT_CADR = 4,
             FILTER_LIFE_LEFT = 5,
-            HUMIDITY = 6,
-            TEMPERATURE = 7,
-            FILTER_LIFE_MCU = 8,
+            HUMIDITY = 6,            // Superior only
+            TEMPERATURE = 7,         // Superior only
+            FILTER_LIFE_MCU = 8,     // Superior only
         };
-        // SensorType aliases (flat namespace)
         static constexpr SensorType AQI = SensorType::AQI;
         static constexpr SensorType PM25 = SensorType::PM25;
         static constexpr SensorType TIMER_CURRENT = SensorType::TIMER_CURRENT;
@@ -84,12 +63,13 @@ namespace esphome
         static constexpr SensorType TEMPERATURE = SensorType::TEMPERATURE;
         static constexpr SensorType FILTER_LIFE_MCU = SensorType::FILTER_LIFE_MCU;
 
-        enum class BinarySensorType : uint8_t {
+        enum class BinarySensorType : uint8_t
+        {
             FILTER_LOW = 0,
-            COVER_REMOVED = 1,
-            WATER_TANK_EMPTY = 2,
-            DRY_ACTIVE = 3,
-            HUMIDIFYING = 4,
+            COVER_REMOVED = 1,    // Superior only
+            WATER_TANK_EMPTY = 2, // Superior only
+            DRY_ACTIVE = 3,       // Superior only
+            HUMIDIFYING = 4,      // Superior only
         };
         static constexpr BinarySensorType FILTER_LOW = BinarySensorType::FILTER_LOW;
         static constexpr BinarySensorType COVER_REMOVED = BinarySensorType::COVER_REMOVED;
@@ -97,63 +77,43 @@ namespace esphome
         static constexpr BinarySensorType DRY_ACTIVE = BinarySensorType::DRY_ACTIVE;
         static constexpr BinarySensorType HUMIDIFYING = BinarySensorType::HUMIDIFYING;
 
-        enum class ButtonType : uint8_t {
+        enum class ButtonType : uint8_t
+        {
             RESET_FILTER_STATS = 0,
         };
         static constexpr ButtonType RESET_FILTER_STATS = ButtonType::RESET_FILTER_STATS;
-        
+
         enum class TextSensorType : uint8_t
         {
             MCU_VERSION = 0,
-            ESP_VERSION = 1,    
-            TIMER_DURATION_INITIAL = 2,
-            TIMER_DURATION_CURRENT = 3,
-            AUTO_MODE_ROOM_SIZE_HIGH_FAN = 4,
-            ERROR_MESSAGE = 5,
-
+            ESP_VERSION = 1,
+            ERROR_MESSAGE = 2,
         };
         static constexpr TextSensorType MCU_VERSION = TextSensorType::MCU_VERSION;
         static constexpr TextSensorType ESP_VERSION = TextSensorType::ESP_VERSION;
-        static constexpr TextSensorType TIMER_DURATION_INITIAL = TextSensorType::TIMER_DURATION_INITIAL;
-        static constexpr TextSensorType TIMER_DURATION_CURRENT = TextSensorType::TIMER_DURATION_CURRENT;
-        static constexpr TextSensorType AUTO_MODE_ROOM_SIZE_HIGH_FAN = TextSensorType::AUTO_MODE_ROOM_SIZE_HIGH_FAN;
         static constexpr TextSensorType ERROR_MESSAGE = TextSensorType::ERROR_MESSAGE;
-
-
 
         enum class SelectType : uint8_t
         {
             AUTO_MODE = 0,
-            SLEEP_MODE = 1,
-            QUICK_CLEAN_FAN_LEVEL = 2,
-            WHITE_NOISE_FAN_LEVEL = 3,
-            SLEEP_MODE_FAN_MODE_LEVEL = 4,
-            DAYTIME_FAN_MODE_LEVEL = 5,
-            AUTO_PROFILE = 6,
-            HUMIDITY_SUBTYPE = 7,
-            DRY_LEVEL = 8,
+            AUTO_PROFILE = 1,    // Superior only
+            HUMIDITY_SUBTYPE = 2, // Superior only
+            DRY_LEVEL = 3,       // Superior only
         };
         static constexpr SelectType AUTO_MODE = SelectType::AUTO_MODE;
-        static constexpr SelectType SLEEP_MODE = SelectType::SLEEP_MODE;
-        static constexpr SelectType QUICK_CLEAN_FAN_LEVEL = SelectType::QUICK_CLEAN_FAN_LEVEL;
-        static constexpr SelectType WHITE_NOISE_FAN_LEVEL = SelectType::WHITE_NOISE_FAN_LEVEL;
-        static constexpr SelectType SLEEP_MODE_FAN_MODE_LEVEL = SelectType::SLEEP_MODE_FAN_MODE_LEVEL;
-        static constexpr SelectType DAYTIME_FAN_MODE_LEVEL = SelectType::DAYTIME_FAN_MODE_LEVEL;
         static constexpr SelectType AUTO_PROFILE = SelectType::AUTO_PROFILE;
         static constexpr SelectType HUMIDITY_SUBTYPE = SelectType::HUMIDITY_SUBTYPE;
         static constexpr SelectType DRY_LEVEL = SelectType::DRY_LEVEL;
 
-
-
         typedef enum
         {
-            ack, //
+            ack,
             setDeviceON,
             setDeviceOFF,
             setDeviceFanLvl1,
             setDeviceFanLvl2,
             setDeviceFanLvl3,
-            setDeviceFanLvl4, // not used for core300s
+            setDeviceFanLvl4,
             setDisplayLockOn,
             setDisplayLockOff,
             setDisplayOn,
@@ -166,20 +126,17 @@ namespace esphome
             setFanModeManual,
             setFanModeAuto,
             setFanModeSleep,
-            resetFilter, // use with care, the filter value is stored in the SC95F8617/ chip and cannot be manipulated
+            resetFilter,
             setWifiLedOn,
             setWifiLedOff,
             setWifiLedBlinking,
             setFilterLedOn,
             setFilterLedOff,
-            // dedicated command for setTimer
-            // Vitals only below
+            // Vital only
             setLightDetectOn,
             setLightDetectOff,
             setFanModePet,
-            setPowerMode,
-            setSleepModeDefault,
-            // Superior only below
+            // Superior only
             setDeviceFanLvl5,
             setDeviceFanLvl6,
             setDeviceFanLvl7,
@@ -198,8 +155,6 @@ namespace esphome
             setAutoDryWaterEmptyOn,
             setAutoDryWaterEmptyOff,
             COMMAND_TYPE_MAX
-
-            // dedicated command for setSleepModeCustom
         } CommandType;
 
         static const char *command_type_to_string(CommandType cmd)
@@ -233,8 +188,6 @@ namespace esphome
                 "setLightDetectOn",
                 "setLightDetectOff",
                 "setFanModePet",
-                "setPowerMode",
-                "setSleepModeDefault",
                 "setDeviceFanLvl5",
                 "setDeviceFanLvl6",
                 "setDeviceFanLvl7",
@@ -255,8 +208,7 @@ namespace esphome
             };
             static_assert(
                 sizeof(names) / sizeof(names[0]) == COMMAND_TYPE_MAX,
-                "CommandType string table out of sync"
-            );
+                "CommandType string table out of sync");
             if (cmd < 0 || cmd >= COMMAND_TYPE_MAX)
                 return "UNKNOWN_COMMAND";
 

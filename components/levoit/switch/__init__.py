@@ -14,8 +14,6 @@ TYPE_MAP = {
     "display": SwitchType.DISPLAY,
     "child_lock": SwitchType.CHILD_LOCK,
     "light_detect": SwitchType.LIGHT_DETECT,
-    "quick_clean": SwitchType.QUICK_CLEAN,
-    "white_noise": SwitchType.WHITE_NOISE,
     "auto_dry_power_off": SwitchType.AUTO_DRY_POWER_OFF,
     "auto_dry_water_empty": SwitchType.AUTO_DRY_WATER_EMPTY,
 }
@@ -23,9 +21,7 @@ TYPE_MAP = {
 ICON_MAP = {
     "display": "mdi:brightness-7",
     "child_lock": "mdi:lock-outline",
-    "light_detect": None,
-    "quick_clean": None,
-    "white_noise": None,
+    "light_detect": "mdi:brightness-auto",
     "auto_dry_power_off": "mdi:fan-auto",
     "auto_dry_water_empty": "mdi:fan-auto",
 }

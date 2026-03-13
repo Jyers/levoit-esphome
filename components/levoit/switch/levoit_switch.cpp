@@ -14,9 +14,6 @@ namespace esphome
       case SwitchType::DISPLAY:
       case SwitchType::CHILD_LOCK:
       case SwitchType::LIGHT_DETECT:
-      case SwitchType::DAYTIME_ENABLED:
-      case SwitchType::QUICK_CLEAN:
-      case SwitchType::WHITE_NOISE:
       case SwitchType::AUTO_DRY_POWER_OFF:
       case SwitchType::AUTO_DRY_WATER_EMPTY:
       default:

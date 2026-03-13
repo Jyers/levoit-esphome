@@ -1,9 +1,8 @@
 #include "core_status.h"
 #include "esphome/core/log.h"
-#include "tlv.h" // <- TLV extraction
+#include "tlv.h"
 #include "types.h"
 #include "fan/levoit_fan.h"
-#include "decoder_helpers.h"
 #include <vector>
 #include <string>
 
@@ -27,8 +26,6 @@ namespace esphome
       uint32_t remaining_sec = payload[0] | (payload[1] << 8) | (payload[2] << 16) | (payload[3] << 24);
       uint32_t initial_sec = payload[4] | (payload[5] << 8) | (payload[6] << 16) | (payload[7] << 24);
 
-      uint16_t remaining_min = remaining_sec / 60;
-      uint16_t initial_min = initial_sec / 60;
       float remaining_hours = remaining_sec / 3600.0f;
       float initial_hours = initial_sec / 3600.0f;
 
@@ -36,9 +33,7 @@ namespace esphome
                remaining_sec, remaining_hours, initial_sec, initial_hours);
 
       self->publish_number(NumberType::TIMER, initial_hours);
-      self->publish_text_sensor(TextSensorType::TIMER_DURATION_INITIAL, format_duration_minutes(initial_min));
       self->publish_sensor(SensorType::TIMER_CURRENT, remaining_hours);
-      self->publish_text_sensor(TextSensorType::TIMER_DURATION_CURRENT, format_duration_minutes(remaining_min));
 
       if (remaining_sec > 0)
       {

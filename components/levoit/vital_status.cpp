@@ -1,9 +1,8 @@
 #include "vital_status.h"
 #include "esphome/core/log.h"
-#include "tlv.h" // <- TLV extraction
+#include "tlv.h"
 #include "types.h"
 #include "fan/levoit_fan.h"
-#include "decoder_helpers.h"
 #include <vector>
 #include <string>
 
@@ -44,13 +43,9 @@ namespace esphome
         {
           uint32_t initial_secs = t.value_u32;
           float initial_hours = initial_secs / 3600.0f;
-          uint16_t initial_min = initial_secs / 60;
           ESP_LOGV(TAG_VITAL, "Initial=%u (0x%04X), hours = %.2f", (unsigned)t.value_u32, (unsigned)t.value_u32, initial_hours);
-          if (self != nullptr){
+          if (self != nullptr)
             self->publish_number(NumberType::TIMER, initial_hours);
-            self->publish_text_sensor(TextSensorType::TIMER_DURATION_INITIAL, format_duration_minutes(initial_min));
-          }
-            
 
           break;
         }
@@ -58,12 +53,10 @@ namespace esphome
         {
           uint32_t remaining_secs = t.value_u32;
           float remaining_hours = remaining_secs / 3600.0f;
-          uint16_t remaining_min = remaining_secs / 60;
 
           if (self != nullptr)
           {
             self->publish_sensor(SensorType::TIMER_CURRENT, remaining_hours);
-            self->publish_text_sensor(TextSensorType::TIMER_DURATION_CURRENT, format_duration_minutes(remaining_min));
             if (remaining_secs > 0)
             {
               self->start_timer();        
@@ -72,9 +65,8 @@ namespace esphome
             {
               if (self->is_timer_active()){
                 self->stop_timer();
-                self->publish_number(NumberType::TIMER, 0.0f); // set to 0 when timer ends
+                self->publish_number(NumberType::TIMER, 0.0f);
               }
-              
             }
           }
 
@@ -237,11 +229,8 @@ namespace esphome
           break;
         case 0x11:
           ESP_LOGV(TAG_VITAL, "EfficientCounter=%u (0x%04X)", (unsigned)t.value_u32, (unsigned)t.value_u32);
-          if (self != nullptr){
-            self->publish_text_sensor(TextSensorType::AUTO_MODE_ROOM_SIZE_HIGH_FAN, format_duration_seconds((unsigned)t.value_u32) );
+          if (self != nullptr)
             self->publish_sensor(SensorType::EFFICIENCY_COUNTER, (unsigned)t.value_u32);
-          }
-           
           break;
         case 0x12:
           ESP_LOGV(TAG_VITAL, "AutoModeProfile=%u", (unsigned)t.value_u32);
