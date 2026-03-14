@@ -29,6 +29,10 @@ namespace esphome
         break;
       case SensorType::AQI:
         break;
+      case SensorType::AIR_QUALITY_PERCENT:
+        this->set_unit_of_measurement("%");
+        this->set_accuracy_decimals(0);
+        break;
       case SensorType::CURRENT_CADR:
         this->set_entity_category(EntityCategory::ENTITY_CATEGORY_DIAGNOSTIC);
         this->set_unit_of_measurement("m³/h");

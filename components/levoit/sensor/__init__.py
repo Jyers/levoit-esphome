@@ -12,6 +12,7 @@ SensorType = levoit_ns.enum("SensorType")
 
 TYPE_MAP = {
     "aqi": SensorType.AQI,
+    "air_quality_percent": SensorType.AIR_QUALITY_PERCENT,
     "pm25": SensorType.PM25,
     "timer_current": SensorType.TIMER_CURRENT,
     "efficiency_counter": SensorType.EFFICIENCY_COUNTER,
@@ -39,6 +40,9 @@ TYPE_DEFAULTS = {
     "aqi": {
         CONF_DEVICE_CLASS: "aqi",
         CONF_ICON: "mdi:molecule",
+    },
+    "air_quality_percent": {
+        CONF_ICON: "mdi:percent",
     },
     "current_cadr": {
         CONF_DEVICE_CLASS: "volume_flow_rate",

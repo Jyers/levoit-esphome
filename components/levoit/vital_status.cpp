@@ -161,9 +161,10 @@ namespace esphome
             self->publish_sensor(SensorType::AQI, (unsigned)t.value_u32);
           break;
         case 0x0A:
-          ESP_LOGV(TAG_VITAL, "AirQualityDetail=%u", (unsigned)t.value_u32);
+          ESP_LOGV(TAG_VITAL, "AirQualityPercent=%u", (unsigned)t.value_u32);
           if (self != nullptr)
           {
+            self->publish_sensor(SensorType::AIR_QUALITY_PERCENT, (unsigned)t.value_u32);
             self->publish_binary_sensor(BinarySensorType::ERROR_STATE, (unsigned)t.value_u32 == 0);
           }
           break;

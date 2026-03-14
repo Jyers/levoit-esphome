@@ -114,8 +114,7 @@ namespace esphome
           break;
 
         case 0x0A:
-          ESP_LOGV(TAG_SUP, "AirQualityDetail/Error=%u", (unsigned)t.value_u32);
-          self->publish_binary_sensor(BinarySensorType::ERROR_STATE, (unsigned)t.value_u32 == 0);
+          ESP_LOGV(TAG_SUP, "ReservedField=0x0A val=%u", (unsigned)t.value_u32);
           break;
 
         case 0x0B:

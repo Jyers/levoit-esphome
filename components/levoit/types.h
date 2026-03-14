@@ -49,10 +49,11 @@ namespace esphome
             EFFICIENCY_COUNTER = 3, // Vital only
             CURRENT_CADR = 4,
             FILTER_LIFE_LEFT = 5,
-            HUMIDITY = 6,           // Superior only
-            TEMPERATURE = 7,        // Superior only
-            FILTER_LIFE_MCU = 8,    // Superior only
-            DRY_TIME_REMAINING = 9, // Superior only
+            HUMIDITY = 6,             // Superior only
+            TEMPERATURE = 7,          // Superior only
+            FILTER_LIFE_MCU = 8,      // Superior only
+            DRY_TIME_REMAINING = 9,   // Superior only
+            AIR_QUALITY_PERCENT = 10, // Vital only
         };
         static constexpr SensorType AQI = SensorType::AQI;
         static constexpr SensorType PM25 = SensorType::PM25;
@@ -64,6 +65,7 @@ namespace esphome
         static constexpr SensorType TEMPERATURE = SensorType::TEMPERATURE;
         static constexpr SensorType FILTER_LIFE_MCU = SensorType::FILTER_LIFE_MCU;
         static constexpr SensorType DRY_TIME_REMAINING = SensorType::DRY_TIME_REMAINING;
+        static constexpr SensorType AIR_QUALITY_PERCENT = SensorType::AIR_QUALITY_PERCENT;
 
         enum class BinarySensorType : uint8_t
         {

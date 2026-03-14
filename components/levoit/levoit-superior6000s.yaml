@@ -145,10 +145,6 @@ binary_sensor:
     type: filter_state
   - platform: levoit
     levoit: levoit_device
-    name: "Error"
-    type: error_state
-  - platform: levoit
-    levoit: levoit_device
     name: "Cover Removed"
     type: cover_removed
   - platform: levoit

@@ -87,6 +87,10 @@ sensor:
     type: pm25
   - platform: levoit
     levoit: levoit_device
+    name: "Air Quality Percent"
+    type: air_quality_percent
+  - platform: levoit
+    levoit: levoit_device
     name: "AQI"
     type: aqi
   - platform: levoit
