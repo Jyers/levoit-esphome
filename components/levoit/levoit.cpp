@@ -509,6 +509,7 @@ namespace esphome
                     total_runtime_++;
 
                     // Get fan speed level from .speed member
+                    // Upper bound is validated in calculate_current_cadr_per_hour() per model
                     int speed = this->fan_->speed;
                     if (speed > 0)
                     {
