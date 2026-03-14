@@ -101,9 +101,7 @@ namespace esphome
       if (msg_type == 0x22)
       {
         // Filter reset from display requires a special 0x52 response
-        if (ptype0 == 0x44 && ptype1 == 0x55 &&
-            (model == ModelType::SUPERIOR6000S ||
-             model == ModelType::VITAL100S || model == ModelType::VITAL200S))
+        if (ptype0 == 0x44 && ptype1 == 0x55)
         {
           self->ackFilterReset(ptype0, ptype1);
         }
@@ -145,6 +143,14 @@ namespace esphome
           {
             decode_core_timer(self, model, payload, payload_len);
           }
+          // Core models: filter reset from display
+          if (msg_type == 0x22 && ptype0 == 0x44 && ptype1 == 0x55)
+          {
+            ESP_LOGI(TAG_DEC, "Filter reset from display (Core)");
+            self->set_used_cadr(0);
+            self->set_total_runtime(0);
+            self->publish_filter_stats_now();
+          }
         }
         if (model == ModelType::VITAL100S || model == ModelType::VITAL200S)
         {
@@ -162,6 +168,14 @@ namespace esphome
           if (msg_type == 0x22 && ptype0 == 0x1B && ptype1 == 0x50)
           {
             decode_vital_timer(self, model, payload, payload_len);
+          }
+          // Vital models: filter reset from display
+          if (msg_type == 0x22 && ptype0 == 0x44 && ptype1 == 0x55)
+          {
+            ESP_LOGI(TAG_DEC, "Filter reset from display (Vital)");
+            self->set_used_cadr(0);
+            self->set_total_runtime(0);
+            self->publish_filter_stats_now();
           }
         }
         if (model == ModelType::SUPERIOR6000S)
