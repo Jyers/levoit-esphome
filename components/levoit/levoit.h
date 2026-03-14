@@ -128,7 +128,7 @@ namespace esphome
       bool esp_timer_active_{false};
       uint32_t esp_timer_start_millis_{0};
       uint32_t esp_timer_duration_secs_{0};
-      uint32_t esp_timer_last_update_{0};
+      uint32_t esp_timer_prev_remaining_secs_{0};
 
       // Dry mode preference (for superior devices)
       // 0 = Low, 1 = High

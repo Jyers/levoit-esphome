@@ -685,18 +685,34 @@ namespace esphome
             if (this->model_ == ModelType::SUPERIOR6000S)
             {
                 // ESP-managed timer for superior devices
-                if (this->esp_timer_active_ && now - esp_timer_last_update_ >= 60000)
+                if (this->esp_timer_active_)
                 {
-                    esp_timer_last_update_ = now;
                     uint32_t elapsed_secs = (now - esp_timer_start_millis_) / 1000;
                     uint32_t remaining = (elapsed_secs >= esp_timer_duration_secs_) ? 0 : (esp_timer_duration_secs_ - elapsed_secs);
-                    float remaining_hours = remaining / 3600.0f;
 
                     if (remaining > 0)
                     {
-                        ESP_LOGD(TAG, "ESP timer update: %u sec remaining", remaining);
-                        this->send_timer_update(remaining);
-                        this->publish_sensor(SensorType::TIMER_CURRENT, remaining_hours);
+                        // Send updates exactly when remaining time crosses whole-minute boundaries.
+                        if (remaining < esp_timer_prev_remaining_secs_)
+                        {
+                            uint32_t next_boundary_secs = (esp_timer_prev_remaining_secs_ / 60) * 60;
+
+                            // If previous value was already on a boundary, the next boundary is one minute lower.
+                            if (next_boundary_secs == esp_timer_prev_remaining_secs_ && next_boundary_secs >= 60)
+                            {
+                                next_boundary_secs -= 60;
+                            }
+
+                            while (next_boundary_secs > 0 && remaining <= next_boundary_secs)
+                            {
+                                ESP_LOGD(TAG, "ESP timer minute-boundary update: %u sec remaining", next_boundary_secs);
+                                this->send_timer_update(next_boundary_secs);
+                                this->publish_sensor(SensorType::TIMER_CURRENT, next_boundary_secs / 3600.0f);
+                                next_boundary_secs -= 60;
+                            }
+                        }
+
+                        esp_timer_prev_remaining_secs_ = remaining;
                     }
                     else
                     {
@@ -978,7 +994,7 @@ namespace esphome
             esp_timer_active_ = true;
             esp_timer_start_millis_ = millis();
             esp_timer_duration_secs_ = duration_secs;
-            esp_timer_last_update_ = esp_timer_start_millis_;
+            esp_timer_prev_remaining_secs_ = duration_secs;
             ESP_LOGI(TAG, "ESP timer started: %u seconds", duration_secs);
         }
 
