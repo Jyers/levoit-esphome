@@ -34,6 +34,43 @@ namespace esphome
 
         static const char *const TAG = "levoit";
 
+        static void log_hex_lines_(const char *tag, const char *label, const uint8_t *data, size_t len)
+        {
+            if (data == nullptr || len == 0)
+            {
+                ESP_LOGV(tag, "%s: <empty>", label);
+                return;
+            }
+
+            constexpr size_t BYTES_PER_LINE = 16;
+            char line[(BYTES_PER_LINE * 5) + 1];
+
+            for (size_t offset = 0; offset < len; offset += BYTES_PER_LINE)
+            {
+                const size_t chunk_len = (len - offset > BYTES_PER_LINE) ? BYTES_PER_LINE : (len - offset);
+                size_t pos = 0;
+
+                for (size_t i = 0; i < chunk_len && pos < sizeof(line); i++)
+                {
+                    const int written = snprintf(line + pos, sizeof(line) - pos, "0x%02X ", data[offset + i]);
+                    if (written <= 0)
+                        break;
+                    pos += static_cast<size_t>(written);
+                }
+
+                if (pos > 0 && line[pos - 1] == ' ')
+                    line[pos - 1] = '\0';
+                else
+                    line[(pos < sizeof(line)) ? pos : (sizeof(line) - 1)] = '\0';
+
+                ESP_LOGV(tag, "%s [%u..%u]: %s",
+                         label,
+                         static_cast<unsigned>(offset),
+                         static_cast<unsigned>(offset + chunk_len - 1),
+                         line);
+            }
+        }
+
         // ===== Component =====
 
         void Levoit::register_switch(SwitchType type, LevoitSwitch *sw)
@@ -738,15 +775,8 @@ namespace esphome
                     payload_len = frame_len - 10;
                 }
 
-                // Debug log frame
-                char hexbuf[2048];
-                size_t pos = 0;
-                for (size_t i = 0; i < frame_len && pos < sizeof(hexbuf) - 6; i++)
-                {
-                    pos += snprintf(hexbuf + pos, sizeof(hexbuf) - pos, "0x%02X ", frame[i]);
-                }
-
-                ESP_LOGV(TAG, "<<< RX packet (%u bytes): %s", (unsigned)frame_len, hexbuf);
+                ESP_LOGV(TAG, "<<< RX packet (%u bytes)", (unsigned)frame_len);
+                log_hex_lines_(TAG, "<<< RX", frame, frame_len);
 
                 // Example: log key header bytes if present
                 if (frame_len >= 10)
@@ -760,16 +790,8 @@ namespace esphome
                     const uint8_t *payload = frame + 10;
                     size_t payload_len = frame_len - 10;
 
-                    char phex[1024];
-                    size_t pos = 0;
-
-                    for (size_t i = 0; i < payload_len && pos < sizeof(phex) - 6; i++)
-                    {
-                        pos += snprintf(phex + pos, sizeof(phex) - pos, "0x%02X ", payload[i]);
-                    }
-
                     ESP_LOGD(TAG, "<<< PAYLOAD Size: %u bytes", (unsigned)payload_len);
-                    ESP_LOGV(TAG, "<<< PAYLOAD: %s", phex);
+                    log_hex_lines_(TAG, "<<< PAYLOAD", payload, payload_len);
                 }
                 else
                 {
