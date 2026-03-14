@@ -1,7 +1,13 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import sensor
-from esphome.const import CONF_DEVICE_CLASS, CONF_ICON, CONF_ID
+from esphome.const import (
+    CONF_DEVICE_CLASS,
+    CONF_ICON,
+    CONF_ID,
+    CONF_STATE_CLASS,
+    STATE_CLASS_MEASUREMENT,
+)
 
 from .. import CONF_LEVOIT_ID, Levoit, levoit_ns
 
@@ -36,17 +42,21 @@ TYPE_DEFAULTS = {
     },
     "pm25": {
         CONF_DEVICE_CLASS: "pm25",
+        CONF_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     },
     "aqi": {
         CONF_DEVICE_CLASS: "aqi",
         CONF_ICON: "mdi:molecule",
+        CONF_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     },
     "air_quality_percent": {
         CONF_ICON: "mdi:percent",
+        CONF_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     },
     "current_cadr": {
         CONF_DEVICE_CLASS: "volume_flow_rate",
         CONF_ICON: "mdi:air-filter",
+        CONF_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     },
     "filter_life_left": {
         CONF_ICON: "mdi:air-filter",
@@ -56,9 +66,11 @@ TYPE_DEFAULTS = {
     },
     "temperature": {
         CONF_DEVICE_CLASS: "temperature",
+        CONF_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     },
     "humidity": {
         CONF_DEVICE_CLASS: "humidity",
+        CONF_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     },
     "dry_time_remaining": {
         CONF_DEVICE_CLASS: "duration",
