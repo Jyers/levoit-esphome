@@ -17,6 +17,7 @@ namespace esphome
       switch (this->type_)
       {
       case SensorType::EFFICIENCY_COUNTER:
+        this->set_state_class("total_increasing");
         this->set_unit_of_measurement("s");
         this->set_entity_category(EntityCategory::ENTITY_CATEGORY_DIAGNOSTIC);
         break;
@@ -25,15 +26,20 @@ namespace esphome
         this->set_accuracy_decimals(2);
         break;
       case SensorType::PM25:
+        this->set_state_class("measurement");
         this->set_unit_of_measurement("µg/m³");
         break;
       case SensorType::AQI:
+        this->set_state_class("measurement");
+        this->set_device_class("aqi");
         break;
       case SensorType::AIR_QUALITY_PERCENT:
+        this->set_state_class("measurement");
         this->set_unit_of_measurement("%");
         this->set_accuracy_decimals(0);
         break;
       case SensorType::CURRENT_CADR:
+        this->set_state_class("measurement");
         this->set_entity_category(EntityCategory::ENTITY_CATEGORY_DIAGNOSTIC);
         this->set_unit_of_measurement("m³/h");
         break;
@@ -46,10 +52,12 @@ namespace esphome
         this->set_accuracy_decimals(0);
         break;
       case SensorType::TEMPERATURE:
+        this->set_state_class("measurement");
         this->set_unit_of_measurement("°C");
         this->set_accuracy_decimals(1);
         break;
       case SensorType::HUMIDITY:
+        this->set_state_class("measurement");
         this->set_unit_of_measurement("%");
         this->set_accuracy_decimals(0);
         break;
