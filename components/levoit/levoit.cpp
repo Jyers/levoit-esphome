@@ -739,7 +739,7 @@ namespace esphome
                 }
 
                 // Debug log frame
-                char hexbuf[1024];
+                char hexbuf[2048];
                 size_t pos = 0;
                 for (size_t i = 0; i < frame_len && pos < sizeof(hexbuf) - 6; i++)
                 {
@@ -760,7 +760,7 @@ namespace esphome
                     const uint8_t *payload = frame + 10;
                     size_t payload_len = frame_len - 10;
 
-                    char phex[512];
+                    char phex[1024];
                     size_t pos = 0;
 
                     for (size_t i = 0; i < payload_len && pos < sizeof(phex) - 6; i++)
