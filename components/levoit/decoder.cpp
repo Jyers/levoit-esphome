@@ -80,6 +80,7 @@ namespace esphome
       // Cache full → always decode
       return true;
     }
+
     void dispatch_decoder(Levoit *self,
                           ModelType model,
                           uint8_t msg_type,
@@ -96,12 +97,23 @@ namespace esphome
 
       ESP_LOGD(TAG_DEC, "dispatch: model=%d ptype=%02X%02X payload_len=%u",
                (int)model, ptype0, ptype1, (unsigned)payload_len);
+
+      // Filter reset from display can arrive in two known packet shapes:
+      // - ptype 0x44 0x55 (existing)
+      // - Vital: ptype 0x05 0x55 with payload 03 01 xx
+      const bool is_filter_reset =
+          (ptype0 == 0x44 && ptype1 == 0x55) ||
+          ((model == ModelType::VITAL100S || model == ModelType::VITAL200S) &&
+           ptype0 == 0x05 && ptype1 == 0x55 &&
+           payload != nullptr && payload_len >= 2 &&
+           payload[0] == 0x03 && payload[1] == 0x01);
+
       // ack all messages!
       // only if (0x22)
       if (msg_type == 0x22)
       {
         // Filter reset from display requires a special 0x52 response
-        if (ptype0 == 0x44 && ptype1 == 0x55)
+        if (is_filter_reset)
         {
           self->ackFilterReset(ptype0, ptype1);
         }
@@ -177,7 +189,7 @@ namespace esphome
         }
 
         // All models: filter reset from display resets the ESP-tracked filter stats
-        if (msg_type == 0x22 && ptype0 == 0x44 && ptype1 == 0x55)
+        if (msg_type == 0x22 && is_filter_reset)
         {
           ESP_LOGI(TAG_DEC, "Filter reset from display (model=%d)", (int)model);
           self->set_used_cadr(0);
