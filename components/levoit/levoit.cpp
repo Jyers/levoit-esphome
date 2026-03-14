@@ -493,19 +493,33 @@ namespace esphome
             // Get fan state - check if fan is ON using .state member
             if (this->fan_ != nullptr && this->fan_->state)
             {
-                // Fan is enabled - track usage
-                total_runtime_++;
-
-                // Get fan speed level (1-4) from .speed member
-                int speed = this->fan_->speed;
-                if (speed > 0 && speed <= 4)
+                if (this->model_ == ModelType::SUPERIOR6000S)
                 {
-                    // Use helper to compute current CADR/hour, then convert to per-minute
-                    uint32_t cadr_per_hour = this->calculate_current_cadr_per_hour();
-                    uint32_t cadr_per_min = cadr_per_hour / 60;
-                    used_cadr_ += cadr_per_min;
-                    ESP_LOGD(TAG, "CADR tracked: +%u m³ (speed=%d, total=%u m³, runtime=%u min)",
-                             cadr_per_min, speed, used_cadr_, total_runtime_);
+                    // Superior (humidifier): wick filter life is purely time-based.
+                    // Only count minutes where the device is on AND actively humidifying.
+                    if (this->get_binary_sensor_state(BinarySensorType::HUMIDIFYING))
+                    {
+                        total_runtime_++;
+                        ESP_LOGD(TAG, "Humidifying runtime tracked: total=%u min", total_runtime_);
+                    }
+                }
+                else
+                {
+                    // Air purifiers (Core/Vital): filter life is CADR-based.
+                    total_runtime_++;
+
+                    // Get fan speed level from .speed member
+                    // Upper bound is validated in calculate_current_cadr_per_hour() per model
+                    int speed = this->fan_->speed;
+                    if (speed > 0)
+                    {
+                        // Use helper to compute current CADR/hour, then convert to per-minute
+                        uint32_t cadr_per_hour = this->calculate_current_cadr_per_hour();
+                        uint32_t cadr_per_min = cadr_per_hour / 60;
+                        used_cadr_ += cadr_per_min;
+                        ESP_LOGD(TAG, "CADR tracked: +%u m³ (speed=%d, total=%u m³, runtime=%u min)",
+                                 cadr_per_min, speed, used_cadr_, total_runtime_);
+                    }
                 }
 
                 // Calculate and publish filter life left (once per minute here)
@@ -549,11 +563,29 @@ namespace esphome
                 return 100.0f; // 100%
 
             float filter_lifetime_months = filter_lifetime_num->state;
-            uint32_t total_filter_capacity = cadr * 24 * 30 * filter_lifetime_months;
-            if (total_filter_capacity == 0)
-                return 100.0f;
 
-            float life_left_percent = 100.0f - ((float)used_cadr_ / (float)total_filter_capacity * 100.0f);
+            float life_left_percent;
+
+            if (this->model_ == ModelType::SUPERIOR6000S)
+            {
+                // Superior (humidifier): wick filter life is purely time-based.
+                // total_runtime_ is minutes of active humidifying time.
+                uint32_t total_filter_capacity_min = static_cast<uint32_t>(filter_lifetime_months * 30 * 24 * 60);
+                if (total_filter_capacity_min == 0)
+                    return 100.0f;
+
+                life_left_percent = 100.0f - ((float)total_runtime_ / (float)total_filter_capacity_min * 100.0f);
+            }
+            else
+            {
+                // Air purifiers (Core/Vital): CADR-based filter life.
+                uint32_t total_filter_capacity = cadr * 24 * 30 * filter_lifetime_months;
+                if (total_filter_capacity == 0)
+                    return 100.0f;
+
+                life_left_percent = 100.0f - ((float)used_cadr_ / (float)total_filter_capacity * 100.0f);
+            }
+
             if (life_left_percent < 0.0f)
                 life_left_percent = 0.0f;
             if (life_left_percent > 100.0f)
@@ -915,7 +947,12 @@ namespace esphome
          */
         void Levoit::ackFilterReset(uint8_t ptype0, uint8_t ptype1)
         {
-            uint8_t pv = 0x02; // Vital/Superior protocol version
+            // Use the correct protocol version based on model
+            uint8_t pv = 0x01;
+            if (this->model_ == ModelType::VITAL100S || this->model_ == ModelType::VITAL200S || this->model_ == ModelType::SUPERIOR6000S)
+            {
+                pv = 0x02;
+            }
 
             std::vector<uint8_t> message = {0xA5, 0x52, 0xFF, 0x04, 0x00, 0x00, pv, ptype0, ptype1, 0x16};
 
