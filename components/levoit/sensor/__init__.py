@@ -30,23 +30,24 @@ TYPE_MAP = {
 }
 
 TYPE_DEFAULTS = {
-    "efficiency_counter": {
-        CONF_DEVICE_CLASS: "duration",
-        CONF_ICON: "mdi:counter",
+    "aqi": {
+        CONF_DEVICE_CLASS: "aqi",
+        CONF_ICON: "mdi:air-filter",
+    },
+    "air_quality_percent": {
+        CONF_ICON: "mdi:percent",
+    },
+    "pm25": {
+        CONF_DEVICE_CLASS: "pm25",
+        CONF_ICON: "mdi:air-filter",
     },
     "timer_current": {
         CONF_DEVICE_CLASS: "duration",
         CONF_ICON: "mdi:timer-outline",
     },
-    "pm25": {
-        CONF_DEVICE_CLASS: "pm25",
-    },
-    "aqi": {
-        CONF_DEVICE_CLASS: "aqi",
-        CONF_ICON: "mdi:molecule",
-    },
-    "air_quality_percent": {
-        CONF_ICON: "mdi:percent",
+    "efficiency_counter": {
+        CONF_DEVICE_CLASS: "duration",
+        CONF_ICON: "mdi:counter",
     },
     "current_cadr": {
         CONF_DEVICE_CLASS: "volume_flow_rate",
@@ -60,9 +61,11 @@ TYPE_DEFAULTS = {
     },
     "temperature": {
         CONF_DEVICE_CLASS: "temperature",
+        CONF_ICON: "mdi:thermometer",
     },
     "humidity": {
         CONF_DEVICE_CLASS: "humidity",
+        CONF_ICON: "mdi:water-percent",
     },
     "dry_time_remaining": {
         CONF_DEVICE_CLASS: "duration",
@@ -75,6 +78,7 @@ CONFIG_SCHEMA = sensor.sensor_schema(LevoitSensor).extend(
     {
         cv.Required(CONF_LEVOIT_ID): cv.use_id(Levoit),
         cv.Required(CONF_TYPE): cv.one_of(*TYPE_MAP.keys(), lower=True),
+        cv.Optional(CONF_ICON): cv.icon,
     }
 )
 

@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.components import number
-from esphome.const import CONF_ID
+from esphome.const import CONF_ID, CONF_ICON
 
 from .. import CONF_LEVOIT_ID, Levoit, levoit_ns
 
@@ -18,11 +18,27 @@ TYPE_MAP = {
     "humidity_target": NumberType.HUMIDITY_TARGET,
 }
 
+TYPE_DEFAULTS = {
+    "timer": {
+        CONF_ICON: "mdi:timer-outline",
+    },
+    "efficiency_room_size": {
+        CONF_ICON: "mdi:home-map-marker",
+    },
+    "filter_lifetime_months": {
+        CONF_ICON: "mdi:air-filter",
+    },
+    "humidity_target": {
+        CONF_ICON: "mdi:water-percent",
+    },
+}
+
 
 CONFIG_SCHEMA = number.number_schema(LevoitNumber).extend(
     {
         cv.Required(CONF_LEVOIT_ID): cv.use_id(Levoit),
         cv.Required(CONF_TYPE): cv.one_of(*TYPE_MAP.keys(), lower=True),
+        cv.Optional(CONF_ICON): cv.icon,
     }
 )
 
@@ -47,6 +63,10 @@ async def to_code(config):
     var = cg.new_Pvariable(config[CONF_ID])
     # inject into config BEFORE register_number
     config = dict(config)
+    
+    # Set default icon for number types that don't have one defined in TYPE_DEFAULTS
+    for key, value in TYPE_DEFAULTS.get(ntype, {}).items():
+        config.setdefault(key, value)
 
     await number.register_number(
         var, config, min_value=min_value, max_value=max_value, step=step
